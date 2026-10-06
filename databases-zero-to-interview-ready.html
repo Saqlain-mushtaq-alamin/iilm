@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Databases from Zero to Interview-Ready: MySQL, PostgreSQL, SQLite & Vector DBs</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a21; --panel2:#1b2029; --text:#e6e8ec; --muted:#9aa3b2;
+    --accent:#5fb3ff; --accent2:#7ee2b8; --code:#0c0e12; --border:#2a2f3a; --warn:#ffb15f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--text); font-family:Georgia, 'Times New Roman', serif;
+    line-height:1.65; margin:0; padding:0;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:40px 28px 120px;}
+  h1,h2,h3,h4{font-family:'Segoe UI',Helvetica,Arial,sans-serif; color:#fff; line-height:1.25;}
+  h1{font-size:2.3em; margin-bottom:.2em;}
+  .subtitle{color:var(--muted); font-family:'Segoe UI',Helvetica,Arial,sans-serif; font-size:1.1em; margin-top:0;}
+  h2.chapter-title{
+    font-size:1.9em; margin-top:70px; padding-top:20px; border-top:3px solid var(--accent);
+    color:var(--accent);
+  }
+  h3{font-size:1.35em; margin-top:2em; color:var(--accent2);}
+  h4{font-size:1.1em; margin-top:1.5em; color:#fff;}
+  p{margin:1em 0;}
+  a{color:var(--accent);}
+  code{
+    font-family:'Consolas','Monaco',monospace; background:var(--code); color:#d7e0ea;
+    padding:2px 6px; border-radius:4px; font-size:0.92em; border:1px solid var(--border);
+  }
+  pre{
+    background:var(--code); border:1px solid var(--border); border-left:4px solid var(--accent);
+    border-radius:6px; padding:16px 18px; overflow-x:auto; font-family:'Consolas','Monaco',monospace;
+    font-size:0.9em; line-height:1.55; margin:1.4em 0;
+  }
+  pre code{background:none; border:none; padding:0; color:#c9e6ff;}
+  .box{
+    background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:16px 20px; margin:1.5em 0; font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  .box.tip{border-left:4px solid var(--accent2);}
+  .box.warn{border-left:4px solid var(--warn);}
+  .box.tip::before{content:"💡 TIP"; display:block; font-weight:bold; color:var(--accent2); margin-bottom:6px; font-size:0.85em; letter-spacing:.5px;}
+  .box.warn::before{content:"⚠ WATCH OUT"; display:block; font-weight:bold; color:var(--warn); margin-bottom:6px; font-size:0.85em; letter-spacing:.5px;}
+  .practice{
+    background:var(--panel2); border:1px dashed var(--accent); border-radius:8px;
+    padding:16px 20px; margin:1.5em 0; font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  .practice h4{margin-top:0; color:var(--accent);}
+  table{border-collapse:collapse; width:100%; margin:1.5em 0; font-family:'Segoe UI',Helvetica,Arial,sans-serif; font-size:0.92em;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left;}
+  th{background:var(--panel2); color:#fff;}
+  tr:nth-child(even){background:#141821;}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:24px 28px; font-family:'Segoe UI',Helvetica,Arial,sans-serif;}
+  .toc h2{margin-top:0; color:#fff; border:none;}
+  .toc ol{padding-left:1.2em;}
+  .toc li{margin:6px 0;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  .quiz-q{margin:1.2em 0;}
+  .quiz-q .qnum{color:var(--accent); font-weight:bold;}
+  .badge{
+    display:inline-block; font-family:'Segoe UI',Helvetica,Arial,sans-serif; font-size:0.72em;
+    background:var(--panel2); color:var(--accent2); border:1px solid var(--border);
+    padding:2px 8px; border-radius:12px; margin-left:8px; vertical-align:middle;
+  }
+  hr{border:none; border-top:1px solid var(--border); margin:3em 0;}
+  .back-to-top{font-family:'Segoe UI',Helvetica,Arial,sans-serif; font-size:0.85em;}
+  .sol{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin:0.8em 0 1.6em;}
+  .sol .qref{color:var(--accent); font-weight:bold; font-family:'Segoe UI',Helvetica,Arial,sans-serif;}
+  ul,ol{margin:1em 0;}
+  li{margin:.35em 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Databases from Zero to Interview-Ready</h1>
+<p class="subtitle">MySQL &middot; PostgreSQL &middot; SQLite &middot; Vector Databases (ChromaDB)<br>
+A single compressed, chapter-by-chapter course — setup to professional-level, built for interview success.</p>
+
+<div class="toc" id="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#ch1">Chapter 1 — The Database Landscape (Why 4 different tools?)</a></li>
+<li><a href="#ch2">Chapter 2 — Setting Up Everything (MySQL, PostgreSQL, SQLite, ChromaDB)</a></li>
+<li><a href="#ch3">Chapter 3 — SQL Fundamentals I: Tables, CRUD, Filtering</a></li>
+<li><a href="#ch4">Chapter 4 — SQL Fundamentals II: Joins, Aggregation, Subqueries</a></li>
+<li><a href="#ch5">Chapter 5 — Database Design: Keys, Relationships, Normalization</a></li>
+<li><a href="#ch6">Chapter 6 — MySQL Deep Dive: Engines, Indexing, Transactions</a></li>
+<li><a href="#ch7">Chapter 7 — PostgreSQL Deep Dive: JSONB, CTEs, Window Functions, Extensions</a></li>
+<li><a href="#ch8">Chapter 8 — SQLite Deep Dive: Embedded Databases</a></li>
+<li><a href="#ch9">Chapter 9 — MySQL vs PostgreSQL vs SQLite: Choosing the Right Tool</a></li>
+<li><a href="#ch10">Chapter 10 — Indexing & Query Optimization (EXPLAIN)</a></li>
+<li><a href="#ch11">Chapter 11 — Transactions, ACID & Concurrency</a></li>
+<li><a href="#ch12">Chapter 12 — Vector Databases & ChromaDB (for AI/ML & RAG)</a></li>
+<li><a href="#ch13">Chapter 13 — Interview Playbook: Top Questions & System Design</a></li>
+<li><a href="#solutions">Solutions — All Chapter Tests</a></li>
+</ol>
+</div>
+
+<h2 class="chapter-title" id="ch1">Chapter 1 — The Database Landscape</h2>
+
+<p>Before touching syntax, you need the mental map interviewers assume you already have. Every database in this book stores data, but they are optimized for different jobs.</p>
+
+<h3>1.1 What is a database, really?</h3>
+<p>A database is software that stores data durably (survives a crash/restart) and lets you query it efficiently, safely (even with many users at once), and reliably. The <strong>database engine</strong> (MySQL, PostgreSQL, SQLite) manages storage on disk, indexing, query planning, and concurrency. SQL is the language you use to talk to it.</p>
+
+<h3>1.2 The four tools in this book</h3>
+<table>
+<tr><th>Tool</th><th>Type</th><th>Runs as</th><th>Best known for</th></tr>
+<tr><td>MySQL</td><td>Relational (RDBMS)</td><td>Client-server (daemon)</td><td>Web apps, read-heavy workloads, huge ecosystem (WordPress, e-commerce)</td></tr>
+<tr><td>PostgreSQL</td><td>Relational (RDBMS), "object-relational"</td><td>Client-server (daemon)</td><td>Correctness, advanced SQL features, complex queries, JSON, extensibility</td></tr>
+<tr><td>SQLite</td><td>Relational, embedded</td><td>In-process library, single file</td><td>Mobile apps, local storage, testing, small/medium single-writer apps</td></tr>
+<tr><td>ChromaDB</td><td>Vector database</td><td>Embedded or client-server</td><td>Storing embeddings for semantic search / RAG in AI applications</td></tr>
+</table>
+
+<div class="box tip">
+Interviewers love the question: <em>"When would you pick X over Y?"</em> By the end of this book (Chapter 9) you'll have a crisp, memorized answer.
+</div>
+
+<h3>1.3 Relational vs. Vector — the core mental model</h3>
+<p>Relational databases store <strong>rows in tables</strong> and answer questions with exact logic: "find all orders where status = 'shipped' AND total &gt; 100." Vector databases store <strong>numeric embeddings</strong> (arrays of floats representing meaning) and answer questions with <strong>similarity</strong>: "find the 5 documents whose meaning is closest to this query." Relational = exact match/filter. Vector = fuzzy/semantic match. Modern AI systems (RAG pipelines) often use both together — Postgres/MySQL for structured data, Chroma for semantic search over unstructured text.</p>
+
+<h3>1.4 SQL: one language, several dialects</h3>
+<p>MySQL, PostgreSQL, and SQLite all speak "SQL," and roughly 90% of the SQL you write is identical across all three (standard SQL). The differences show up in: data types, functions, auto-increment syntax, and advanced features. This book teaches you standard SQL first (Chapters 3–5, works almost everywhere), then dedicates a deep-dive chapter to each engine's specific quirks.</p>
+
+<div class="practice">
+<h4>Practical checkpoint</h4>
+<p>No coding yet — just make sure you can answer out loud: "What's the difference between a relational database and a vector database, and why would a company use both?" You'll need this exact framing in interviews.</p>
+</div>
+
+<div class="box warn">This chapter has no quiz — Chapter 1 is orientation. Testing starts in Chapter 2.</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch2">Chapter 2 — Setting Up Everything</h2>
+
+<p>You said you want this "from the beginning," so we install everything now. Pick your OS section. You only strictly need MySQL + one client to follow Chapters 3–5, but install all four so later chapters work immediately.</p>
+
+<h3>2.1 Installing MySQL</h3>
+<h4>Windows</h4>
+<p>Download <strong>MySQL Installer</strong> from dev.mysql.com/downloads/installer/. Run it, choose "Server only" (or "Developer Default" if you also want Workbench, a GUI tool). During setup you'll set a <strong>root password</strong> — write it down, you'll use it constantly.</p>
+<h4>macOS</h4>
+<pre><code>brew install mysql
+brew services start mysql
+mysql_secure_installation   # sets root password, removes test DB</code></pre>
+<h4>Linux (Ubuntu/Debian)</h4>
+<pre><code>sudo apt update
+sudo apt install mysql-server
+sudo systemctl start mysql
+sudo mysql_secure_installation</code></pre>
+<h4>Connect</h4>
+<pre><code>mysql -u root -p</code></pre>
+<p>You should land on a <code>mysql&gt;</code> prompt. Type <code>SELECT VERSION();</code> then <code>;</code> to confirm it works, then <code>exit</code>.</p>
+
+<h3>2.2 Installing PostgreSQL</h3>
+<h4>Windows</h4>
+<p>Download the installer from postgresql.org/download/windows/ (EDB installer). It installs the server, pgAdmin (GUI), and command-line tools, and asks you to set a password for the <code>postgres</code> superuser.</p>
+<h4>macOS</h4>
+<pre><code>brew install postgresql@16
+brew services start postgresql@16</code></pre>
+<h4>Linux (Ubuntu/Debian)</h4>
+<pre><code>sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql</code></pre>
+<h4>Connect</h4>
+<pre><code>sudo -u postgres psql</code></pre>
+<p>Confirm with <code>SELECT version();</code> then quit with <code>\q</code>.</p>
+
+<h3>2.3 Installing SQLite</h3>
+<p>SQLite needs almost no install — it's a single file library. Most systems already have it.</p>
+<pre><code># macOS/Linux: check if it exists
+sqlite3 --version
+
+# Ubuntu, if missing:
+sudo apt install sqlite3
+
+# Windows: download the "sqlite-tools" zip from sqlite.org/download.html,
+# unzip, and add the folder to your PATH.</code></pre>
+<pre><code># Create/open a database file (creates it if it doesn't exist)
+sqlite3 mytest.db
+sqlite&gt; SELECT sqlite_version();
+sqlite&gt; .quit</code></pre>
+
+<h3>2.4 Installing ChromaDB (Python)</h3>
+<p>ChromaDB is a Python-first vector database, usually run embedded inside your app. You need Python 3.9+.</p>
+<pre><code>python -m venv venv
+source venv/bin/activate     # Windows: venv\Scripts\activate
+pip install chromadb</code></pre>
+<pre><code># quick sanity check, in a Python shell
+import chromadb
+client = chromadb.Client()
+print(client.heartbeat())   # prints a nanosecond timestamp if working</code></pre>
+
+<h3>2.5 GUI clients (optional but recommended)</h3>
+<table>
+<tr><th>Database</th><th>Free GUI options</th></tr>
+<tr><td>MySQL</td><td>MySQL Workbench, DBeaver, TablePlus</td></tr>
+<tr><td>PostgreSQL</td><td>pgAdmin, DBeaver, TablePlus</td></tr>
+<tr><td>SQLite</td><td>DB Browser for SQLite, DBeaver</td></tr>
+</table>
+<p><strong>DBeaver</strong> supports all three relational databases in one app — install that if you want a single tool. But do the exercises on the command line at least once; interviewers sometimes screen-share a terminal.</p>
+
+<div class="box tip">Keep a scratch database for practice in each engine, e.g. <code>practice_db</code>. Never practice destructive commands (DROP, DELETE without WHERE) on anything real.</div>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Install MySQL, PostgreSQL, and SQLite.</li>
+<li>Connect to each with the command line and run a version-check query.</li>
+<li>Create a database called <code>practice_db</code> in both MySQL (<code>CREATE DATABASE practice_db;</code>) and PostgreSQL (<code>CREATE DATABASE practice_db;</code>).</li>
+<li>Create a file-based SQLite database called <code>practice.db</code>.</li>
+<li>Install ChromaDB with pip and run the heartbeat check.</li>
+</ol>
+</div>
+
+<h3>Chapter 2 Test</h3>
+<div class="quiz-q"><span class="qnum">Q2.1.</span> What's the fundamental architectural difference between SQLite and MySQL/PostgreSQL?</div>
+<div class="quiz-q"><span class="qnum">Q2.2.</span> Which command connects you to MySQL as the root user from the terminal?</div>
+<div class="quiz-q"><span class="qnum">Q2.3.</span> True or false: ChromaDB requires a separate server process to be running before you can use it in Python.</div>
+<div class="quiz-q"><span class="qnum">Q2.4.</span> What command creates a new database in PostgreSQL once you're inside <code>psql</code>?</div>
+<p><em>(Answers in the Solutions chapter at the end of the book.)</em></p>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch3">Chapter 3 — SQL Fundamentals I: Tables, CRUD, Filtering</h2>
+
+<p>Everything here works, unmodified, in MySQL, PostgreSQL, and SQLite (minor notes flagged inline). We'll build a small <code>company</code> database and use it for the rest of the book.</p>
+
+<h3>3.1 Creating a database & table</h3>
+<pre><code>CREATE DATABASE company;
+USE company;                 -- MySQL / not needed in Postgres (use \c company) or SQLite (per-file)
+
+CREATE TABLE employees (
+    id          INT PRIMARY KEY AUTO_INCREMENT,   -- MySQL syntax
+    first_name  VARCHAR(50) NOT NULL,
+    last_name   VARCHAR(50) NOT NULL,
+    email       VARCHAR(100) UNIQUE,
+    department  VARCHAR(50),
+    salary      DECIMAL(10,2),
+    hire_date   DATE
+);</code></pre>
+<div class="box warn">
+<code>AUTO_INCREMENT</code> is MySQL-only. PostgreSQL uses <code>id SERIAL PRIMARY KEY</code> (or <code>GENERATED ALWAYS AS IDENTITY</code> in modern Postgres). SQLite uses <code>id INTEGER PRIMARY KEY AUTOINCREMENT</code>. Chapters 6–8 cover each engine's exact syntax.
+</div>
+
+<h3>3.2 Data types you must know</h3>
+<table>
+<tr><th>Category</th><th>Common types</th></tr>
+<tr><td>Integer</td><td>INT, BIGINT, SMALLINT</td></tr>
+<tr><td>Decimal/money</td><td>DECIMAL(p,s) / NUMERIC(p,s) — exact, use for money</td></tr>
+<tr><td>Floating point</td><td>FLOAT, DOUBLE — approximate, avoid for money</td></tr>
+<tr><td>Text</td><td>VARCHAR(n) (limited length), TEXT (unlimited)</td></tr>
+<tr><td>Date/Time</td><td>DATE, TIME, DATETIME/TIMESTAMP</td></tr>
+<tr><td>Boolean</td><td>BOOLEAN (true native type in Postgres; MySQL stores as TINYINT(1))</td></tr>
+</table>
+
+<h3>3.3 Inserting data (Create)</h3>
+<pre><code>INSERT INTO employees (first_name, last_name, email, department, salary, hire_date)
+VALUES
+('Alice', 'Khan', 'alice@corp.com', 'Engineering', 95000, '2021-03-15'),
+('Bilal', 'Rahman', 'bilal@corp.com', 'Sales', 60000, '2020-07-01'),
+('Chen', 'Wu', 'chen@corp.com', 'Engineering', 105000, '2019-11-20'),
+('Dana', 'Osei', 'dana@corp.com', 'Marketing', 70000, '2022-01-10'),
+('Evan', 'Lopez', 'evan@corp.com', 'Engineering', 88000, '2023-05-05');</code></pre>
+
+<h3>3.4 Reading data (Read) — SELECT</h3>
+<pre><code>SELECT * FROM employees;                       -- all columns, all rows
+SELECT first_name, last_name FROM employees;    -- specific columns
+SELECT * FROM employees WHERE department = 'Engineering';
+SELECT * FROM employees WHERE salary &gt; 80000 ORDER BY salary DESC;
+SELECT * FROM employees LIMIT 3;                -- first 3 rows
+SELECT DISTINCT department FROM employees;      -- unique values</code></pre>
+
+<h3>3.5 Filtering — WHERE clause operators</h3>
+<pre><code>=  !=  &lt;&gt;  &gt;  &lt;  &gt;=  &lt;=
+WHERE salary BETWEEN 60000 AND 100000
+WHERE department IN ('Sales', 'Marketing')
+WHERE email LIKE '%corp.com'          -- % = any sequence, _ = single char
+WHERE department IS NULL              -- never use "= NULL", it never matches
+WHERE department IS NOT NULL
+WHERE salary &gt; 80000 AND department = 'Engineering'
+WHERE salary &gt; 80000 OR hire_date &lt; '2021-01-01'</code></pre>
+
+<h3>3.6 Updating data (Update)</h3>
+<pre><code>UPDATE employees
+SET salary = salary * 1.10
+WHERE department = 'Engineering';</code></pre>
+<div class="box warn">Always run the equivalent SELECT with the same WHERE clause first to see exactly which rows will be affected. An UPDATE or DELETE with no WHERE hits <strong>every row</strong>.</div>
+
+<h3>3.7 Deleting data (Delete)</h3>
+<pre><code>DELETE FROM employees WHERE last_name = 'Lopez';
+-- vs. TRUNCATE TABLE employees;  -- removes ALL rows fast, resets identity, can't be rolled back in MySQL (MyISAM)</code></pre>
+
+<h3>3.8 Modifying table structure — ALTER</h3>
+<pre><code>ALTER TABLE employees ADD COLUMN phone VARCHAR(20);
+ALTER TABLE employees DROP COLUMN phone;
+ALTER TABLE employees RENAME COLUMN department TO dept;   -- Postgres/MySQL 8+
+ALTER TABLE employees MODIFY COLUMN salary DECIMAL(12,2); -- MySQL
+-- Postgres equivalent: ALTER TABLE employees ALTER COLUMN salary TYPE DECIMAL(12,2);</code></pre>
+
+<h3>3.9 Sorting, limiting, and aliases</h3>
+<pre><code>SELECT first_name AS fname, salary AS pay
+FROM employees
+ORDER BY salary DESC, first_name ASC
+LIMIT 5 OFFSET 2;   -- skip 2, take next 5 (pagination). SQLite/Postgres/MySQL all support this.</code></pre>
+
+<div class="practice">
+<h4>Practical exercise — build it yourself</h4>
+<ol>
+<li>Create a <code>company</code> database in MySQL and load the <code>employees</code> table above.</li>
+<li>Write a query for all Engineering employees earning over 90,000, sorted by hire date.</li>
+<li>Give everyone in Marketing a 5% raise using UPDATE.</li>
+<li>Add a new column <code>is_remote BOOLEAN</code> to the table.</li>
+</ol>
+</div>
+
+<h3>Chapter 3 Test</h3>
+<div class="quiz-q"><span class="qnum">Q3.1.</span> Write a query to select the first and last name of every employee hired after 2021-01-01.</div>
+<div class="quiz-q"><span class="qnum">Q3.2.</span> Why is <code>WHERE department = NULL</code> always wrong, and what should you use instead?</div>
+<div class="quiz-q"><span class="qnum">Q3.3.</span> What data type should you use to store a salary, and why not FLOAT?</div>
+<div class="quiz-q"><span class="qnum">Q3.4.</span> Write a query that returns the 2nd and 3rd highest-paid employees only.</div>
+<div class="quiz-q"><span class="qnum">Q3.5.</span> What's the difference between DELETE and TRUNCATE?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch4">Chapter 4 — SQL Fundamentals II: Joins, Aggregation, Subqueries</h2>
+
+<p>This is the chapter interviewers actually test the most. Add a second table so we have something to join.</p>
+
+<pre><code>CREATE TABLE departments (
+    id   INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE projects (
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    title         VARCHAR(100),
+    department_id INT,
+    budget        DECIMAL(12,2),
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);
+
+INSERT INTO departments (name) VALUES ('Engineering'), ('Sales'), ('Marketing'), ('HR');
+INSERT INTO projects (title, department_id, budget) VALUES
+('Platform Rewrite', 1, 250000),
+('Q3 Outbound Campaign', 2, 40000),
+('Brand Refresh', 3, 60000),
+('Recruiting Drive', NULL, 15000);   -- unassigned department, on purpose</code></pre>
+
+<h3>4.1 Aggregate functions</h3>
+<pre><code>SELECT COUNT(*) FROM employees;
+SELECT AVG(salary) FROM employees;
+SELECT MIN(salary), MAX(salary) FROM employees;
+SELECT SUM(budget) FROM projects;</code></pre>
+
+<h3>4.2 GROUP BY and HAVING</h3>
+<pre><code>SELECT department, COUNT(*) AS headcount, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY department;
+
+-- HAVING filters groups (after aggregation), WHERE filters rows (before aggregation)
+SELECT department, COUNT(*) AS headcount
+FROM employees
+GROUP BY department
+HAVING COUNT(*) &gt; 1;</code></pre>
+<div class="box tip">Interview one-liner: <strong>WHERE</strong> filters rows before grouping; <strong>HAVING</strong> filters groups after aggregation. You cannot use an aggregate function inside WHERE.</div>
+
+<h3>4.3 Joins — the interview centerpiece</h3>
+<p>Assume <code>employees</code> has a <code>department_id</code> column referencing <code>departments.id</code> (imagine we normalized it that way — see Chapter 5).</p>
+<pre><code>-- INNER JOIN: only rows that match in both tables
+SELECT e.first_name, d.name AS department
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.id;
+
+-- LEFT JOIN: all rows from the left table, matched data from right (NULL if no match)
+SELECT d.name, p.title
+FROM departments d
+LEFT JOIN projects p ON d.id = p.department_id;
+-- HR department will appear with a NULL project, since it has none.
+
+-- RIGHT JOIN: mirror of LEFT JOIN (not supported in SQLite; flip the tables instead)
+SELECT p.title, d.name
+FROM projects p
+RIGHT JOIN departments d ON p.department_id = d.id;
+
+-- FULL OUTER JOIN: everything from both sides (Postgres yes; MySQL: emulate with UNION of LEFT+RIGHT; SQLite 3.39+ supports it natively)
+SELECT d.name, p.title
+FROM departments d
+FULL OUTER JOIN projects p ON d.id = p.department_id;
+
+-- SELF JOIN: joining a table to itself (e.g., find employees in the same department)
+SELECT a.first_name AS emp1, b.first_name AS emp2, a.department
+FROM employees a
+JOIN employees b ON a.department = b.department AND a.id &lt; b.id;</code></pre>
+
+<div class="box tip">Draw two circles (a Venn diagram) whenever asked about joins in an interview — INNER = intersection, LEFT = all of left circle, FULL OUTER = everything. It shows visual understanding, not memorized syntax.</div>
+
+<h3>4.4 Subqueries</h3>
+<pre><code>-- Subquery in WHERE
+SELECT first_name, salary FROM employees
+WHERE salary &gt; (SELECT AVG(salary) FROM employees);
+
+-- Subquery with IN
+SELECT name FROM departments
+WHERE id IN (SELECT department_id FROM projects WHERE budget &gt; 50000);
+
+-- Correlated subquery (references outer query — runs once per outer row)
+SELECT e.first_name, e.salary, e.department
+FROM employees e
+WHERE e.salary = (SELECT MAX(salary) FROM employees e2 WHERE e2.department = e.department);
+
+-- Subquery in FROM (derived table)
+SELECT dept_avg.department, dept_avg.avg_sal
+FROM (SELECT department, AVG(salary) AS avg_sal FROM employees GROUP BY department) AS dept_avg
+WHERE dept_avg.avg_sal &gt; 70000;</code></pre>
+
+<h3>4.5 Set operations</h3>
+<pre><code>SELECT name FROM departments
+UNION
+SELECT title FROM projects;      -- combines results, removes duplicates
+
+SELECT name FROM departments
+UNION ALL
+SELECT title FROM projects;      -- keeps duplicates, faster</code></pre>
+
+<h3>4.6 String, date & conditional functions you'll use constantly</h3>
+<pre><code>SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM employees;   -- Postgres/SQLite: also || operator
+SELECT UPPER(first_name), LOWER(last_name) FROM employees;
+SELECT YEAR(hire_date), MONTH(hire_date) FROM employees;   -- MySQL. Postgres: EXTRACT(YEAR FROM hire_date)
+SELECT CASE
+         WHEN salary &gt; 90000 THEN 'Senior'
+         WHEN salary &gt; 70000 THEN 'Mid'
+         ELSE 'Junior'
+       END AS level
+FROM employees;
+SELECT COALESCE(department, 'Unassigned') FROM projects_by_department; -- fills NULLs with a default</code></pre>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Add a <code>department_id</code> column to <code>employees</code>, populate it to match the <code>departments</code> table.</li>
+<li>Write a query showing each department's name and total employee count, including departments with zero employees.</li>
+<li>Write a query finding the highest-paid employee in each department using a correlated subquery.</li>
+<li>Write a query showing all projects with budget above the average project budget.</li>
+</ol>
+</div>
+
+<h3>Chapter 4 Test</h3>
+<div class="quiz-q"><span class="qnum">Q4.1.</span> What's the difference between WHERE and HAVING?</div>
+<div class="quiz-q"><span class="qnum">Q4.2.</span> Write a query returning every department name along with its project count, including departments with no projects.</div>
+<div class="quiz-q"><span class="qnum">Q4.3.</span> What is a correlated subquery, and how is it different from a regular subquery?</div>
+<div class="quiz-q"><span class="qnum">Q4.4.</span> Which JOIN type returns rows only when there's a match on both sides?</div>
+<div class="quiz-q"><span class="qnum">Q4.5.</span> What's the difference between UNION and UNION ALL?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch5">Chapter 5 — Database Design: Keys, Relationships, Normalization</h2>
+
+<h3>5.1 Keys</h3>
+<table>
+<tr><th>Key type</th><th>Meaning</th></tr>
+<tr><td>Primary Key (PK)</td><td>Uniquely identifies each row; cannot be NULL; one per table</td></tr>
+<tr><td>Foreign Key (FK)</td><td>Column referencing another table's PK; enforces referential integrity</td></tr>
+<tr><td>Candidate Key</td><td>Any column (or set) that could serve as PK (e.g., email is unique too)</td></tr>
+<tr><td>Composite Key</td><td>A PK made of two or more columns together</td></tr>
+<tr><td>Unique Key</td><td>Enforces uniqueness but allows one NULL (unlike PK)</td></tr>
+</table>
+
+<h3>5.2 Relationship types</h3>
+<ul>
+<li><strong>One-to-Many</strong> (most common): one department has many employees. FK lives on the "many" side (<code>employees.department_id</code>).</li>
+<li><strong>Many-to-Many</strong>: employees can work on many projects, and projects have many employees. Requires a <strong>junction table</strong>: <code>employee_projects(employee_id, project_id)</code>.</li>
+<li><strong>One-to-One</strong>: e.g., <code>employees</code> and <code>employee_passport_details</code> — rare, usually merged into one table unless splitting for security/performance reasons.</li>
+</ul>
+
+<pre><code>CREATE TABLE employee_projects (
+    employee_id INT,
+    project_id  INT,
+    role        VARCHAR(50),
+    PRIMARY KEY (employee_id, project_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (project_id)  REFERENCES projects(id)
+);</code></pre>
+
+<h3>5.3 Normalization (interview favorite)</h3>
+<table>
+<tr><th>Form</th><th>Rule</th></tr>
+<tr><td>1NF</td><td>Atomic columns — no repeating groups/lists in one cell (e.g., no "PHP,MySQL,React" in one column)</td></tr>
+<tr><td>2NF</td><td>1NF + every non-key column depends on the <em>whole</em> primary key (matters for composite keys)</td></tr>
+<tr><td>3NF</td><td>2NF + no transitive dependencies (a non-key column shouldn't depend on another non-key column)</td></tr>
+</table>
+<div class="box tip">
+Classic 3NF violation: an <code>orders</code> table storing both <code>customer_id</code> and <code>customer_email</code>. Email depends on customer, not on the order — it belongs in the <code>customers</code> table. Fix: remove it from <code>orders</code>, join when needed.
+</div>
+
+<h3>5.4 Denormalization — when breaking the rules is correct</h3>
+<p>Normalization reduces redundancy but costs extra JOINs. High-read systems sometimes deliberately denormalize (duplicate data) to avoid expensive joins — e.g., storing <code>product_name</code> directly on an <code>order_items</code> row so historical orders don't change if the product is renamed later. Know this trade-off: <strong>normalize for correctness/write-safety, denormalize for read performance</strong>, and explain you'd only do the latter with a measured reason.</p>
+
+<h3>5.5 Constraints as design tools</h3>
+<pre><code>CREATE TABLE orders (
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    status     VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending','shipped','cancelled')),
+    total      DECIMAL(10,2) CHECK (total &gt;= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);</code></pre>
+<p><code>ON DELETE CASCADE</code> means deleting a customer auto-deletes their orders. Alternatives: <code>ON DELETE SET NULL</code>, <code>ON DELETE RESTRICT</code> (block the delete if children exist — often the safest default).</p>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Design (on paper or in SQL) a many-to-many relationship between <code>employees</code> and <code>projects</code>.</li>
+<li>Take a badly-designed table with a comma-separated "skills" column and redesign it into 1NF.</li>
+<li>Add a CHECK constraint ensuring salary is always positive.</li>
+</ol>
+</div>
+
+<h3>Chapter 5 Test</h3>
+<div class="quiz-q"><span class="qnum">Q5.1.</span> What's the difference between a Primary Key and a Unique Key?</div>
+<div class="quiz-q"><span class="qnum">Q5.2.</span> How do you model a many-to-many relationship?</div>
+<div class="quiz-q"><span class="qnum">Q5.3.</span> Give an example of a 1NF violation and how to fix it.</div>
+<div class="quiz-q"><span class="qnum">Q5.4.</span> When might denormalization be the right engineering decision?</div>
+<div class="quiz-q"><span class="qnum">Q5.5.</span> What does <code>ON DELETE CASCADE</code> do?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch6">Chapter 6 — MySQL Deep Dive: Engines, Indexing, Transactions</h2>
+
+<h3>6.1 Storage engines</h3>
+<p>MySQL's defining feature is <strong>pluggable storage engines</strong> — the same SQL front end, different storage back ends.</p>
+<table>
+<tr><th>Engine</th><th>Transactions?</th><th>Row/table locking</th><th>Use case</th></tr>
+<tr><td>InnoDB (default since 5.5)</td><td>Yes (ACID)</td><td>Row-level</td><td>Default choice for almost everything today</td></tr>
+<tr><td>MyISAM</td><td>No</td><td>Table-level</td><td>Legacy; fast reads, no crash safety — avoid for new projects</td></tr>
+<tr><td>Memory</td><td>No</td><td>Table-level</td><td>Temporary, in-RAM tables</td></tr>
+</table>
+<pre><code>CREATE TABLE t (id INT) ENGINE=InnoDB;
+SHOW TABLE STATUS LIKE 'employees';   -- see which engine a table uses</code></pre>
+
+<h3>6.2 MySQL-specific ID & type syntax</h3>
+<pre><code>CREATE TABLE employees (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    ...
+);
+-- ENUM: MySQL-specific fixed value set
+CREATE TABLE orders (
+    status ENUM('pending','shipped','cancelled') DEFAULT 'pending'
+);</code></pre>
+
+<h3>6.3 Indexes</h3>
+<pre><code>CREATE INDEX idx_lastname ON employees(last_name);
+CREATE UNIQUE INDEX idx_email ON employees(email);
+CREATE INDEX idx_dept_salary ON employees(department, salary);  -- composite index
+SHOW INDEX FROM employees;
+DROP INDEX idx_lastname ON employees;</code></pre>
+<p>InnoDB tables are stored as a <strong>clustered index</strong> on the primary key — rows are physically ordered by PK. Every secondary index stores the PK value, then a lookup ("bookmark lookup") back to the full row.</p>
+
+<h3>6.4 Transactions & isolation levels</h3>
+<pre><code>START TRANSACTION;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;      -- or ROLLBACK; on error
+
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;  -- MySQL's InnoDB default
+-- Other levels: READ UNCOMMITTED, READ COMMITTED, SERIALIZABLE</code></pre>
+<p>InnoDB's default is <strong>REPEATABLE READ</strong> (unusual — most databases default to READ COMMITTED). It uses MVCC (Multi-Version Concurrency Control) plus gap locks to prevent phantom reads within a transaction.</p>
+
+<h3>6.5 EXPLAIN and common performance moves</h3>
+<pre><code>EXPLAIN SELECT * FROM employees WHERE department = 'Engineering';</code></pre>
+<p>Look at the <code>type</code> column: <code>ALL</code> (full table scan — bad on large tables), <code>ref</code>/<code>range</code> (using an index — good), <code>const</code> (best, single-row PK lookup). If <code>type</code> is <code>ALL</code> on a large filtered table, you're missing an index.</p>
+
+<h3>6.6 Users & privileges</h3>
+<pre><code>CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'strongpassword';
+GRANT SELECT, INSERT, UPDATE ON company.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'app_user'@'localhost';</code></pre>
+
+<h3>6.7 Replication (know the concept for interviews)</h3>
+<p>MySQL replicates via the <strong>binary log</strong>: a primary server logs every write; replicas apply the same log to stay in sync. Classic use: one primary for writes, several replicas for reads, to scale read-heavy applications horizontally.</p>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Confirm your <code>employees</code> table uses InnoDB via <code>SHOW TABLE STATUS</code>.</li>
+<li>Create a composite index on (department, salary) and run EXPLAIN on a query filtering by both.</li>
+<li>Wrap two UPDATE statements in a transaction, then intentionally ROLLBACK and verify nothing changed.</li>
+<li>Create a read-only MySQL user and confirm it can SELECT but not INSERT.</li>
+</ol>
+</div>
+
+<h3>Chapter 6 Test</h3>
+<div class="quiz-q"><span class="qnum">Q6.1.</span> What's the default and recommended storage engine in modern MySQL, and why?</div>
+<div class="quiz-q"><span class="qnum">Q6.2.</span> What does EXPLAIN's <code>type = ALL</code> mean, and what should you do about it?</div>
+<div class="quiz-q"><span class="qnum">Q6.3.</span> What is MySQL InnoDB's default transaction isolation level?</div>
+<div class="quiz-q"><span class="qnum">Q6.4.</span> Explain, in one or two sentences, how MySQL replication works.</div>
+<div class="quiz-q"><span class="qnum">Q6.5.</span> What's a clustered index, and how does InnoDB use it?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch7">Chapter 7 — PostgreSQL Deep Dive</h2>
+
+<p>PostgreSQL is what interviewers mean by "advanced SQL." It's known for correctness, extensibility, and rich data types.</p>
+
+<h3>7.1 Identity columns & schemas</h3>
+<pre><code>CREATE TABLE employees (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,   -- modern replacement for SERIAL
+    first_name VARCHAR(50) NOT NULL
+);
+
+CREATE SCHEMA hr;
+CREATE TABLE hr.employees (...);   -- namespacing tables inside a database
+SET search_path TO hr, public;</code></pre>
+<p>Postgres databases are organized into <strong>schemas</strong> (namespaces within one database) — MySQL doesn't have this; in MySQL, "database" and "schema" are the same thing.</p>
+
+<h3>7.2 JSON & JSONB — the killer feature</h3>
+<pre><code>CREATE TABLE events (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    payload JSONB
+);
+INSERT INTO events (payload) VALUES ('{"type":"click","user_id":42,"tags":["homepage","cta"]}');
+
+SELECT payload-&gt;&gt;'type' AS event_type FROM events;             -- extract as text
+SELECT payload-&gt;'tags' FROM events;                              -- extract as JSON
+SELECT * FROM events WHERE payload @&gt; '{"type":"click"}';        -- contains operator
+CREATE INDEX idx_payload ON events USING GIN (payload);           -- fast JSON queries</code></pre>
+<p><code>JSONB</code> stores JSON in a binary, indexable format (vs. plain <code>JSON</code> which just stores text) — always prefer JSONB.</p>
+
+<h3>7.3 Window functions</h3>
+<pre><code>SELECT first_name, department, salary,
+       RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS dept_rank,
+       AVG(salary) OVER (PARTITION BY department) AS dept_avg,
+       salary - LAG(salary) OVER (PARTITION BY department ORDER BY hire_date) AS diff_from_prev_hire
+FROM employees;</code></pre>
+<p>Unlike GROUP BY, window functions don't collapse rows — they attach a calculation to each row while still "seeing" a window/partition of related rows. Extremely common interview topic: <code>RANK()</code> vs <code>DENSE_RANK()</code> vs <code>ROW_NUMBER()</code> (RANK leaves gaps after ties, DENSE_RANK doesn't, ROW_NUMBER never ties).</p>
+
+<h3>7.4 Common Table Expressions (CTEs)</h3>
+<pre><code>WITH dept_totals AS (
+    SELECT department, SUM(salary) AS total_payroll
+    FROM employees
+    GROUP BY department
+)
+SELECT * FROM dept_totals WHERE total_payroll &gt; 200000;
+
+-- Recursive CTE: e.g., an org chart / manager hierarchy
+WITH RECURSIVE org_chart AS (
+    SELECT id, first_name, manager_id, 1 AS level
+    FROM employees WHERE manager_id IS NULL
+    UNION ALL
+    SELECT e.id, e.first_name, e.manager_id, oc.level + 1
+    FROM employees e
+    JOIN org_chart oc ON e.manager_id = oc.id
+)
+SELECT * FROM org_chart;</code></pre>
+
+<h3>7.5 Array & other rich types</h3>
+<pre><code>CREATE TABLE posts (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tags TEXT[]
+);
+INSERT INTO posts (tags) VALUES ('{"tech","sql","career"}');
+SELECT * FROM posts WHERE 'sql' = ANY(tags);
+-- Also notable: UUID, INET (IP addresses), full-text search TSVECTOR</code></pre>
+
+<h3>7.6 Extensions</h3>
+<pre><code>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+SELECT uuid_generate_v4();
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;   -- fuzzy text search
+CREATE EXTENSION IF NOT EXISTS vector;    -- pgvector! turns Postgres into a vector DB too (see Ch.12 note)</code></pre>
+
+<h3>7.7 MVCC & VACUUM</h3>
+<p>Postgres, like InnoDB, uses MVCC — but instead of updating rows in place, an UPDATE writes a whole new row version and marks the old one dead. Dead rows accumulate ("bloat") until <code>VACUUM</code> reclaims the space. <code>autovacuum</code> normally handles this automatically; interviewers sometimes ask "what is VACUUM and why does Postgres need it" specifically because MySQL doesn't have an equivalent concept.</p>
+
+<h3>7.8 EXPLAIN ANALYZE</h3>
+<pre><code>EXPLAIN ANALYZE SELECT * FROM employees WHERE department = 'Engineering';</code></pre>
+<p>Unlike plain EXPLAIN, <code>ANALYZE</code> actually runs the query and shows real timings alongside the planner's estimate — the standard tool for diagnosing slow Postgres queries.</p>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Create a JSONB column and query nested fields with <code>-&gt;&gt;</code> and <code>@&gt;</code>.</li>
+<li>Write a window function ranking employees by salary within department.</li>
+<li>Write a recursive CTE for a simple 2-level manager hierarchy.</li>
+<li>Run <code>EXPLAIN ANALYZE</code> on a filtered query and identify whether it used an index scan or a sequential scan.</li>
+</ol>
+</div>
+
+<h3>Chapter 7 Test</h3>
+<div class="quiz-q"><span class="qnum">Q7.1.</span> What's the difference between JSON and JSONB in Postgres, and which should you default to?</div>
+<div class="quiz-q"><span class="qnum">Q7.2.</span> What's the difference between RANK(), DENSE_RANK(), and ROW_NUMBER()?</div>
+<div class="quiz-q"><span class="qnum">Q7.3.</span> What is a recursive CTE typically used for?</div>
+<div class="quiz-q"><span class="qnum">Q7.4.</span> What does VACUUM do, and why does Postgres need it but MySQL/InnoDB doesn't work the same way?</div>
+<div class="quiz-q"><span class="qnum">Q7.5.</span> What's the difference between EXPLAIN and EXPLAIN ANALYZE?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch8">Chapter 8 — SQLite Deep Dive</h2>
+
+<h3>8.1 What makes SQLite different</h3>
+<p>SQLite is not a client-server database — it's a <strong>library linked directly into your application</strong>. The entire database (schema, data, indexes) lives in one ordinary file on disk. There's no server process, no network protocol, no username/password. This makes it the default choice for mobile apps (Android/iOS both ship it built-in), browsers, desktop apps, and local caches.</p>
+
+<h3>8.2 Dynamic typing ("type affinity")</h3>
+<pre><code>CREATE TABLE notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    body TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+<p>Unlike MySQL/Postgres, SQLite mostly doesn't enforce column types strictly — a column declared TEXT can still store an integer. Types are a "hint" (affinity), not a hard constraint (this changed a bit with STRICT tables in newer SQLite, but assume flexible typing by default). Interviewers like this contrast question specifically.</p>
+
+<h3>8.3 Foreign keys are OFF by default</h3>
+<pre><code>PRAGMA foreign_keys = ON;   -- must run this every connection, or FKs are not enforced!</code></pre>
+
+<h3>8.4 Concurrency limits</h3>
+<p>Classic (rollback-journal) mode allows <strong>one writer at a time</strong> — other writers block/fail with "database is locked." <strong>WAL mode</strong> (Write-Ahead Logging) allows one writer concurrently with many readers, which is why almost every real SQLite deployment enables it:</p>
+<pre><code>PRAGMA journal_mode = WAL;</code></pre>
+
+<h3>8.5 Practical use in code (Python example)</h3>
+<pre><code>import sqlite3
+conn = sqlite3.connect('practice.db')
+cur = conn.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, title TEXT)")
+cur.execute("INSERT INTO notes (title) VALUES (?)", ("First note",))
+conn.commit()
+for row in cur.execute("SELECT * FROM notes"):
+    print(row)
+conn.close()</code></pre>
+<div class="box warn">Always use parameterized queries (<code>?</code> placeholders) instead of string-formatting SQL — this prevents SQL injection, and it matters in every database, not just SQLite.</div>
+
+<h3>8.6 When SQLite is the wrong choice</h3>
+<ul>
+<li>Multiple application servers writing to the same database over a network — SQLite has no network protocol.</li>
+<li>High write concurrency from many simultaneous writers.</li>
+<li>You need fine-grained user permissions/roles at the database level.</li>
+</ul>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Create a SQLite database with a <code>notes</code> table and insert 3 rows via the command line.</li>
+<li>Turn on <code>PRAGMA foreign_keys = ON</code> and prove a bad foreign key insert now fails.</li>
+<li>Enable WAL mode and confirm with <code>PRAGMA journal_mode;</code>.</li>
+<li>Write a small Python script that inserts and reads rows using parameterized queries.</li>
+</ol>
+</div>
+
+<h3>Chapter 8 Test</h3>
+<div class="quiz-q"><span class="qnum">Q8.1.</span> How is SQLite's architecture fundamentally different from MySQL/PostgreSQL?</div>
+<div class="quiz-q"><span class="qnum">Q8.2.</span> Are foreign keys enforced by default in SQLite?</div>
+<div class="quiz-q"><span class="qnum">Q8.3.</span> What does WAL mode improve, and why is it usually enabled in production apps?</div>
+<div class="quiz-q"><span class="qnum">Q8.4.</span> Name two scenarios where SQLite is a poor choice.</div>
+<div class="quiz-q"><span class="qnum">Q8.5.</span> Why should you always use parameterized queries?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch9">Chapter 9 — MySQL vs PostgreSQL vs SQLite: Choosing the Right Tool</h2>
+
+<table>
+<tr><th></th><th>MySQL</th><th>PostgreSQL</th><th>SQLite</th></tr>
+<tr><td>Architecture</td><td>Client-server</td><td>Client-server</td><td>Embedded, single file</td></tr>
+<tr><td>SQL feature depth</td><td>Good, historically simpler</td><td>Very deep (CTEs, windows, JSON, arrays, extensions)</td><td>Solid core SQL, some gaps</td></tr>
+<tr><td>Concurrency</td><td>Excellent (row locking, replicas)</td><td>Excellent (MVCC)</td><td>One writer at a time (WAL helps)</td></tr>
+<tr><td>Best for</td><td>Web apps, read-heavy sites, familiar ecosystem</td><td>Complex queries, data integrity, analytics, geodata (PostGIS), AI (pgvector)</td><td>Mobile/embedded apps, prototypes, local tools, tests</td></tr>
+<tr><td>Scaling story</td><td>Mature read-replica ecosystem</td><td>Strong, plus logical replication</td><td>Doesn't scale to multi-server</td></tr>
+<tr><td>Setup overhead</td><td>Server install + config</td><td>Server install + config</td><td>None — just a file</td></tr>
+</table>
+
+<h3>9.1 The interview-ready answer</h3>
+<div class="box tip">
+"I'd reach for <strong>SQLite</strong> for an embedded/local/mobile app or quick prototype with a single writer. I'd reach for <strong>MySQL</strong> for a standard web application with well-understood read-heavy traffic and a team already fluent in it. I'd reach for <strong>PostgreSQL</strong> when I need advanced SQL (window functions, CTEs), strict data integrity, JSON alongside relational data, or extensions like PostGIS/pgvector — it's become the default 'no strong reason otherwise' choice for new projects in most of the industry today."
+</div>
+
+<h3>9.2 A note for your AI/ML direction</h3>
+<p>Since you're building toward AI/ML engineering: PostgreSQL with the <strong>pgvector</strong> extension lets you store embeddings and do similarity search <em>inside</em> your relational database — no separate vector database needed for many projects. Chroma (Chapter 12) is better when vector search is your primary workload and you want a purpose-built, simpler API; pgvector is better when you already have Postgres and want embeddings alongside your normal structured data in one transaction.</p>
+
+<h3>Chapter 9 Test</h3>
+<div class="quiz-q"><span class="qnum">Q9.1.</span> You're building a mobile app that stores user notes locally with no server — which database, and why?</div>
+<div class="quiz-q"><span class="qnum">Q9.2.</span> A team needs complex analytical queries with window functions and wants to store some semi-structured JSON alongside relational data — which database fits best?</div>
+<div class="quiz-q"><span class="qnum">Q9.3.</span> What's a scenario where pgvector might replace the need for a separate vector database?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch10">Chapter 10 — Indexing & Query Optimization</h2>
+
+<h3>10.1 What an index actually is</h3>
+<p>An index is a separate, sorted data structure (almost always a <strong>B-Tree</strong>) that maps column values to row locations, so the engine can find rows without scanning the whole table. Without an index, any filter requires a full table scan — O(n). With an index, a lookup is roughly O(log n).</p>
+
+<h3>10.2 When indexes help — and when they hurt</h3>
+<ul>
+<li>Helps: columns used in WHERE, JOIN ON, ORDER BY, and GROUP BY, especially on large tables with selective filters.</li>
+<li>Hurts: every index slows down INSERT/UPDATE/DELETE (the index must be updated too), and takes disk space. Don't index columns you never filter/sort/join on. Don't over-index small tables — a full scan of 200 rows is instant anyway.</li>
+</ul>
+
+<h3>10.3 Composite index column order matters</h3>
+<pre><code>CREATE INDEX idx_dept_salary ON employees(department, salary);
+-- This index helps:
+--   WHERE department = 'Engineering'
+--   WHERE department = 'Engineering' AND salary &gt; 90000
+-- This index does NOT help (efficiently):
+--   WHERE salary &gt; 90000   (department not specified — can't use the index's sort order first)</code></pre>
+<p>Rule of thumb: put the most selective / most frequently filtered-alone column first (a "leftmost prefix" rule applies across MySQL, Postgres, and SQLite).</p>
+
+<h3>10.4 Reading EXPLAIN output</h3>
+<pre><code>EXPLAIN SELECT * FROM employees WHERE department = 'Engineering' AND salary &gt; 90000;</code></pre>
+<p>Things to check: is it doing a <strong>full scan</strong> or an <strong>index scan/seek</strong>? How many rows does the planner estimate it will touch? Is it sorting in memory when it didn't need to (because an index could have supplied the order)?</p>
+
+<h3>10.5 N+1 query problem (very common interview/real-world bug)</h3>
+<pre><code>-- BAD: one query per employee (N+1 queries total)
+for emp in employees:
+    db.query("SELECT * FROM projects WHERE employee_id = ?", emp.id)
+
+-- GOOD: one query, using IN or a JOIN
+SELECT * FROM projects WHERE employee_id IN (1,2,3,4,5);
+-- or
+SELECT e.*, p.* FROM employees e JOIN projects p ON p.employee_id = e.id;</code></pre>
+
+<h3>10.6 Other optimization techniques</h3>
+<ul>
+<li><strong>Covering indexes</strong>: an index that contains every column the query needs, so the engine never touches the actual table row.</li>
+<li><strong>LIMIT early</strong>: apply filters/limits before expensive joins where possible.</li>
+<li><strong>Avoid SELECT *</strong> in production code — fetch only needed columns (less I/O, enables covering indexes).</li>
+<li><strong>Avoid functions on indexed columns in WHERE</strong> — <code>WHERE YEAR(hire_date) = 2024</code> can't use a plain index on <code>hire_date</code>; rewrite as a range: <code>WHERE hire_date &gt;= '2024-01-01' AND hire_date &lt; '2025-01-01'</code>.</li>
+<li><strong>Connection pooling</strong>: reuse DB connections instead of opening a new one per request.</li>
+</ul>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Run EXPLAIN on a query with no index, note the scan type, then add an index and compare.</li>
+<li>Rewrite a "function-wrapped" WHERE clause into an index-friendly range condition.</li>
+<li>Identify an N+1 pattern in a small hypothetical loop and rewrite it as a single query.</li>
+</ol>
+</div>
+
+<h3>Chapter 10 Test</h3>
+<div class="quiz-q"><span class="qnum">Q10.1.</span> What data structure do most database indexes use, and roughly what time complexity does it give lookups?</div>
+<div class="quiz-q"><span class="qnum">Q10.2.</span> Why shouldn't you add an index to every column "just in case"?</div>
+<div class="quiz-q"><span class="qnum">Q10.3.</span> For a composite index on (a, b), which queries can use it efficiently?</div>
+<div class="quiz-q"><span class="qnum">Q10.4.</span> What is the N+1 query problem, and how do you fix it?</div>
+<div class="quiz-q"><span class="qnum">Q10.5.</span> Why does wrapping an indexed column in a function (like YEAR()) hurt index usage?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch11">Chapter 11 — Transactions, ACID & Concurrency</h2>
+
+<h3>11.1 ACID — say this cold in interviews</h3>
+<table>
+<tr><th>Letter</th><th>Property</th><th>Meaning</th></tr>
+<tr><td>A</td><td>Atomicity</td><td>A transaction's operations all succeed, or none do (all-or-nothing)</td></tr>
+<tr><td>C</td><td>Consistency</td><td>A transaction moves the database from one valid state to another, respecting constraints</td></tr>
+<tr><td>I</td><td>Isolation</td><td>Concurrent transactions don't see each other's uncommitted changes</td></tr>
+<tr><td>D</td><td>Durability</td><td>Once committed, data survives a crash (written to durable storage)</td></tr>
+</table>
+
+<h3>11.2 Transaction basics</h3>
+<pre><code>BEGIN;                       -- or START TRANSACTION;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;                      -- makes it permanent
+-- or ROLLBACK;               -- undoes everything since BEGIN
+
+SAVEPOINT before_risky_step;
+-- ... risky statement ...
+ROLLBACK TO before_risky_step;   -- undo just that part, transaction still open</code></pre>
+
+<h3>11.3 Isolation levels & the anomalies they prevent</h3>
+<table>
+<tr><th>Level</th><th>Dirty read</th><th>Non-repeatable read</th><th>Phantom read</th></tr>
+<tr><td>Read Uncommitted</td><td>Possible</td><td>Possible</td><td>Possible</td></tr>
+<tr><td>Read Committed</td><td>Prevented</td><td>Possible</td><td>Possible</td></tr>
+<tr><td>Repeatable Read</td><td>Prevented</td><td>Prevented</td><td>Possible (MySQL InnoDB mostly prevents it too, via gap locks)</td></tr>
+<tr><td>Serializable</td><td>Prevented</td><td>Prevented</td><td>Prevented</td></tr>
+</table>
+<ul>
+<li><strong>Dirty read</strong>: reading another transaction's uncommitted change.</li>
+<li><strong>Non-repeatable read</strong>: re-reading the same row twice in one transaction gives different results because another transaction committed a change in between.</li>
+<li><strong>Phantom read</strong>: re-running the same filtered query gives a different <em>set</em> of rows because another transaction inserted/deleted matching rows.</li>
+</ul>
+<p>PostgreSQL and MySQL both default differently: Postgres defaults to <strong>Read Committed</strong>; MySQL/InnoDB defaults to <strong>Repeatable Read</strong>. This is a frequently-asked distinction.</p>
+
+<h3>11.4 Locking</h3>
+<pre><code>SELECT * FROM accounts WHERE id = 1 FOR UPDATE;   -- row-level lock, blocks other writers until commit</code></pre>
+<p><strong>Optimistic locking</strong> (check a version number before committing, retry on conflict) scales better under high contention than <strong>pessimistic locking</strong> (<code>FOR UPDATE</code>, hold a lock the whole time) — a common system-design follow-up question.</p>
+
+<h3>11.5 Deadlocks</h3>
+<p>Two transactions each hold a lock the other needs — the database detects this and kills one transaction (rolls it back) so the other can proceed. Application code should catch this and retry.</p>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Open two terminal sessions to the same MySQL/Postgres database. In one, BEGIN a transaction and UPDATE a row without committing. In the other, try to SELECT ... FOR UPDATE the same row and observe the block.</li>
+<li>Commit the first transaction and watch the second unblock.</li>
+<li>Reproduce a non-repeatable read under Read Committed, then show Repeatable Read prevents it.</li>
+</ol>
+</div>
+
+<h3>Chapter 11 Test</h3>
+<div class="quiz-q"><span class="qnum">Q11.1.</span> Spell out what each letter of ACID means in your own words.</div>
+<div class="quiz-q"><span class="qnum">Q11.2.</span> What's the difference between a dirty read and a non-repeatable read?</div>
+<div class="quiz-q"><span class="qnum">Q11.3.</span> What are the default isolation levels of MySQL (InnoDB) vs PostgreSQL?</div>
+<div class="quiz-q"><span class="qnum">Q11.4.</span> What's the difference between optimistic and pessimistic locking?</div>
+<div class="quiz-q"><span class="qnum">Q11.5.</span> What is a deadlock, and how does the database resolve it?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch12">Chapter 12 — Vector Databases & ChromaDB (for AI/ML & RAG)</h2>
+
+<h3>12.1 What's an embedding?</h3>
+<p>An embedding is a list of numbers (e.g., 384 or 1536 floats) produced by a machine learning model that represents the <em>meaning</em> of a piece of text (or image, audio, etc.). Texts with similar meaning end up with embeddings that are numerically close together in that high-dimensional space. This is what makes "semantic search" possible: instead of matching exact keywords, you match meaning.</p>
+
+<h3>12.2 Why not just use SQL for this?</h3>
+<p>Relational databases are built for exact filters and don't natively answer "which of these 1 million vectors is closest to this one?" efficiently. Vector databases build specialized indexes (commonly <strong>HNSW</strong> — Hierarchical Navigable Small World graphs) that make nearest-neighbor search over millions of high-dimensional vectors fast, using <strong>Approximate Nearest Neighbor (ANN)</strong> search — approximate because exact nearest-neighbor search at scale is too slow, and a very close match is good enough in practice.</p>
+
+<h3>12.3 Core Chroma concepts</h3>
+<table>
+<tr><th>Concept</th><th>Meaning</th></tr>
+<tr><td>Collection</td><td>Like a "table" — a named group of embeddings + their metadata</td></tr>
+<tr><td>Document</td><td>The original text (Chroma can auto-embed it for you)</td></tr>
+<tr><td>Embedding</td><td>The vector representation of a document</td></tr>
+<tr><td>Metadata</td><td>Structured key/value data attached to each item (e.g., source, date, category) — filterable alongside vector search</td></tr>
+<tr><td>Query</td><td>Find the top-k most similar items to a given query text/vector</td></tr>
+</table>
+
+<h3>12.4 Basic ChromaDB usage</h3>
+<pre><code>import chromadb
+
+# In-memory / local persistent client
+client = chromadb.PersistentClient(path="./chroma_data")
+
+collection = client.create_collection(name="articles")
+
+collection.add(
+    documents=[
+        "MySQL is a popular relational database used in web applications.",
+        "PostgreSQL supports advanced SQL features like window functions and JSONB.",
+        "ChromaDB stores embeddings for fast semantic similarity search."
+    ],
+    metadatas=[
+        {"topic": "mysql"},
+        {"topic": "postgres"},
+        {"topic": "vector-db"}
+    ],
+    ids=["doc1", "doc2", "doc3"]
+)
+
+results = collection.query(
+    query_texts=["Which database is good for JSON data?"],
+    n_results=2
+)
+print(results)   # returns the closest matching documents by meaning, not exact keywords</code></pre>
+<p>Notice you never wrote SQL, and you never manually created an embedding vector — Chroma uses a default embedding model under the hood (you can swap in OpenAI, Sentence-Transformers, or any custom embedding function).</p>
+
+<h3>12.5 Filtering with metadata (combining "SQL-like" filters with vector search)</h3>
+<pre><code>results = collection.query(
+    query_texts=["database performance tuning"],
+    n_results=3,
+    where={"topic": "mysql"}     # exact-match filter, applied alongside vector similarity
+)</code></pre>
+
+<h3>12.6 Updating & deleting</h3>
+<pre><code>collection.update(ids=["doc1"], documents=["MySQL 8 added window functions and CTEs."])
+collection.delete(ids=["doc3"])
+collection.get(ids=["doc1"])          # fetch by id, no similarity search
+print(collection.count())</code></pre>
+
+<h3>12.7 Distance metrics</h3>
+<p>Similarity is measured with a distance function — most common is <strong>cosine similarity</strong> (angle between vectors — direction matters more than magnitude, standard for text embeddings), also common: <strong>Euclidean (L2) distance</strong> and <strong>dot product</strong>. Chroma lets you configure this per collection.</p>
+
+<h3>12.8 The RAG pattern (Retrieval-Augmented Generation)</h3>
+<p>This is the single most important real-world use case tying your AI/ML goals together:</p>
+<ol>
+<li>Split your documents into chunks, embed each chunk, store in Chroma.</li>
+<li>When a user asks a question, embed the question and query Chroma for the top-k most relevant chunks.</li>
+<li>Pass those chunks + the question into an LLM prompt ("answer using only this context").</li>
+<li>The LLM answers grounded in your actual data instead of hallucinating from training data alone.</li>
+</ol>
+<pre><code># Simplified RAG skeleton
+query = "How does MySQL replication work?"
+relevant_chunks = collection.query(query_texts=[query], n_results=3)["documents"][0]
+context = "\n".join(relevant_chunks)
+prompt = f"Context:\n{context}\n\nQuestion: {query}\nAnswer using only the context above."
+# send `prompt` to an LLM API</code></pre>
+
+<h3>12.9 pgvector — the relational-database alternative</h3>
+<pre><code>CREATE EXTENSION vector;
+CREATE TABLE items (id bigserial PRIMARY KEY, content TEXT, embedding vector(384));
+CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops);
+SELECT content FROM items ORDER BY embedding &lt;=&gt; '[0.12, 0.98, ...]' LIMIT 5;</code></pre>
+<p>The <code>&lt;=&gt;</code> operator is cosine distance in pgvector. Know this exists — "would you use Chroma or pgvector?" is a realistic interview question given your Postgres background (answer: pgvector if the vectors are secondary to a mostly-relational app already in Postgres; Chroma/a dedicated vector DB if vector search is the primary workload or you need to scale it independently).</p>
+
+<div class="practice">
+<h4>Practical exercise</h4>
+<ol>
+<li>Install chromadb, create a collection, add 5 short documents with metadata about a topic you know well.</li>
+<li>Query it with a question phrased completely differently from the document wording, and confirm semantic matching still finds the right document.</li>
+<li>Add a <code>where</code> metadata filter to a query.</li>
+<li>Build the minimal RAG skeleton above (retrieval only — you don't need a real LLM call to understand the pattern).</li>
+</ol>
+</div>
+
+<h3>Chapter 12 Test</h3>
+<div class="quiz-q"><span class="qnum">Q12.1.</span> What is an embedding, in your own words?</div>
+<div class="quiz-q"><span class="qnum">Q12.2.</span> Why can't a standard B-Tree index efficiently answer "find the most similar vectors"?</div>
+<div class="quiz-q"><span class="qnum">Q12.3.</span> What is a Chroma "collection" analogous to in a relational database?</div>
+<div class="quiz-q"><span class="qnum">Q12.4.</span> Describe the RAG pattern in 3–4 steps.</div>
+<div class="quiz-q"><span class="qnum">Q12.5.</span> When would you choose pgvector over a dedicated vector database like Chroma?</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="ch13">Chapter 13 — Interview Playbook</h2>
+
+<h3>13.1 Rapid-fire conceptual questions (be able to answer in one breath)</h3>
+<ul>
+<li><strong>What is a primary key vs foreign key?</strong> PK uniquely identifies a row in its own table; FK references a PK in another table to enforce a relationship.</li>
+<li><strong>What is normalization, and why would you denormalize?</strong> See Chapter 5.</li>
+<li><strong>INNER vs LEFT JOIN?</strong> See Chapter 4.</li>
+<li><strong>What is an index, and its trade-off?</strong> Faster reads, slower writes, extra storage.</li>
+<li><strong>What is ACID?</strong> See Chapter 11.</li>
+<li><strong>What is a transaction?</strong> A group of operations executed as a single all-or-nothing unit.</li>
+<li><strong>What's the N+1 problem?</strong> See Chapter 10.</li>
+<li><strong>SQL vs NoSQL?</strong> SQL = structured schema, strong consistency, relationships via joins. NoSQL (document/key-value/wide-column/graph) = flexible schema, often trades consistency for horizontal scalability. Vector databases are effectively a specialized NoSQL category for similarity search.</li>
+<li><strong>What's a view?</strong> A saved, named SELECT query that behaves like a virtual table — doesn't store data itself (unless it's a materialized view, which does).</li>
+<li><strong>What's a stored procedure?</strong> Precompiled SQL logic saved in the database, callable by name — reduces round trips, but pushes business logic into the DB layer (a debated trade-off).</li>
+</ul>
+
+<h3>13.2 SQL coding questions you should be able to write cold</h3>
+<pre><code>-- 1. Second highest salary
+SELECT MAX(salary) FROM employees WHERE salary &lt; (SELECT MAX(salary) FROM employees);
+
+-- 2. Find duplicate emails
+SELECT email, COUNT(*) FROM employees GROUP BY email HAVING COUNT(*) &gt; 1;
+
+-- 3. Employees earning more than their department average
+SELECT e.first_name, e.salary FROM employees e
+WHERE e.salary &gt; (SELECT AVG(salary) FROM employees e2 WHERE e2.department = e.department);
+
+-- 4. Running total (window function)
+SELECT hire_date, salary,
+       SUM(salary) OVER (ORDER BY hire_date) AS running_total
+FROM employees;
+
+-- 5. Top N per group
+SELECT * FROM (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rn
+    FROM employees
+) ranked
+WHERE rn &lt;= 2;   -- top 2 earners per department</code></pre>
+
+<h3>13.3 System design questions involving databases</h3>
+<p>When asked "design a URL shortener / design Twitter / design an e-commerce order system," structure your database answer like this:</p>
+<ol>
+<li><strong>Identify entities and relationships</strong> first (draw the ER model mentally: users, orders, products...).</li>
+<li><strong>Pick the database type</strong> and justify it (relational for structured transactional data; add a vector DB if there's a semantic search/recommendation angle; consider a cache like Redis for hot reads).</li>
+<li><strong>Discuss scaling</strong>: read replicas for read-heavy load, sharding/partitioning for write-heavy or huge datasets, connection pooling, caching layer.</li>
+<li><strong>Discuss consistency needs</strong>: does this need strict ACID (payments) or is eventual consistency acceptable (like counts)?</li>
+<li><strong>Mention indexing strategy</strong> for the top 2–3 query patterns you expect.</li>
+</ol>
+
+<h3>13.4 Behavioral/experience framing for you specifically</h3>
+<div class="box tip">
+Given your background (Python, Rust, React/React Native, LLM tooling, and security research), a strong personal answer to "tell me about your database experience" is: "I've used relational databases (MySQL/PostgreSQL/SQLite) across different projects — from local-first mobile apps needing embedded storage, to backend services needing proper relational design, and I've paired that with vector databases like Chroma for semantic search in LLM-based tooling I've built, including some memory/RAG-style features." Adjust to whatever's actually true of your specific projects.
+</div>
+
+<h3>13.5 Final comprehensive test</h3>
+<div class="quiz-q"><span class="qnum">QF.1.</span> Write a query to find employees with the 3rd highest salary (without LIMIT/OFFSET).</div>
+<div class="quiz-q"><span class="qnum">QF.2.</span> Write a query returning each department's average salary, only for departments with more than 2 employees.</div>
+<div class="quiz-q"><span class="qnum">QF.3.</span> Explain, as if to a non-technical interviewer, the difference between MySQL, PostgreSQL, SQLite, and ChromaDB in one or two sentences total.</div>
+<div class="quiz-q"><span class="qnum">QF.4.</span> What's the difference between a clustered and non-clustered (secondary) index?</div>
+<div class="quiz-q"><span class="qnum">QF.5.</span> Design (describe, don't need to write full SQL) a schema for a simple RAG-powered support chatbot that needs both structured ticket data and semantic document search.</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+<hr>
+<h2 class="chapter-title" id="solutions">Solutions — All Chapter Tests</h2>
+<p>Try to answer each question yourself before reading the solution. That struggle is what makes it stick for an interview.</p>
+
+<h3>Chapter 2 Solutions</h3>
+<div class="sol"><span class="qref">A2.1</span> — SQLite is an embedded, in-process library that stores everything in a single file with no server process. MySQL and PostgreSQL run as a separate server process (daemon) that clients connect to over a network protocol (even if that network is localhost).</div>
+<div class="sol"><span class="qref">A2.2</span> — <code>mysql -u root -p</code> (it will then prompt for the password).</div>
+<div class="sol"><span class="qref">A2.3</span> — False (for the default embedded/client mode). ChromaDB can run fully in-process with a <code>PersistentClient</code>; it only needs a separate server if you explicitly run it in client-server (<code>HttpClient</code>) mode.</div>
+<div class="sol"><span class="qref">A2.4</span> — <code>CREATE DATABASE practice_db;</code></div>
+
+<h3>Chapter 3 Solutions</h3>
+<div class="sol"><span class="qref">A3.1</span> — <code>SELECT first_name, last_name FROM employees WHERE hire_date &gt; '2021-01-01';</code></div>
+<div class="sol"><span class="qref">A3.2</span> — NULL means "unknown/absent," and comparisons with <code>=</code> against NULL always evaluate to unknown (not true), so no rows ever match. Use <code>WHERE department IS NULL</code> instead.</div>
+<div class="sol"><span class="qref">A3.3</span> — DECIMAL/NUMERIC, because it stores exact values. FLOAT/DOUBLE are binary floating-point approximations and can introduce rounding errors — unacceptable for money.</div>
+<div class="sol"><span class="qref">A3.4</span> — <code>SELECT * FROM employees ORDER BY salary DESC LIMIT 2 OFFSET 1;</code></div>
+<div class="sol"><span class="qref">A3.5</span> — DELETE removes rows one at a time, can use a WHERE clause, fires triggers, and can be rolled back inside a transaction. TRUNCATE removes all rows at once (no WHERE), is faster, typically resets auto-increment counters, and in some engines/configurations can't be rolled back.</div>
+
+<h3>Chapter 4 Solutions</h3>
+<div class="sol"><span class="qref">A4.1</span> — WHERE filters individual rows before grouping/aggregation happens; HAVING filters groups after aggregation, and can reference aggregate functions like COUNT()/AVG().</div>
+<div class="sol"><span class="qref">A4.2</span> — <code>SELECT d.name, COUNT(p.id) AS project_count FROM departments d LEFT JOIN projects p ON d.id = p.department_id GROUP BY d.name;</code></div>
+<div class="sol"><span class="qref">A4.3</span> — A correlated subquery references a column from the outer query, so it conceptually re-runs once per outer row (versus a regular subquery, which runs once, independently, and returns a fixed result used by the outer query).</div>
+<div class="sol"><span class="qref">A4.4</span> — INNER JOIN.</div>
+<div class="sol"><span class="qref">A4.5</span> — UNION removes duplicate rows from the combined result (extra sorting/dedup cost); UNION ALL keeps all rows including duplicates and is faster.</div>
+
+<h3>Chapter 5 Solutions</h3>
+<div class="sol"><span class="qref">A5.1</span> — A table can have only one Primary Key, and it can never be NULL. A table can have multiple Unique Keys, and (in most databases) a unique column can contain one NULL value (NULL isn't considered equal to another NULL for uniqueness purposes).</div>
+<div class="sol"><span class="qref">A5.2</span> — With a junction/bridge table holding two foreign keys, one referencing each side of the relationship (e.g., <code>employee_projects(employee_id, project_id)</code>).</div>
+<div class="sol"><span class="qref">A5.3</span> — A "skills" column storing <code>"PHP,MySQL,React"</code> in one cell violates 1NF. Fix: create a separate <code>employee_skills(employee_id, skill)</code> table with one row per skill.</div>
+<div class="sol"><span class="qref">A5.4</span> — When read performance is a measured bottleneck and the extra joins from a fully normalized design are too costly — e.g., storing a denormalized <code>product_name</code> on historical order line items so past orders remain accurate even if the product is later renamed.</div>
+<div class="sol"><span class="qref">A5.5</span> — It automatically deletes child rows when the referenced parent row is deleted (e.g., deleting a customer also deletes all their orders).</div>
+
+<h3>Chapter 6 Solutions</h3>
+<div class="sol"><span class="qref">A6.1</span> — InnoDB, because it supports transactions (ACID), row-level locking (better concurrency), foreign keys, and crash recovery — MyISAM lacks all of these.</div>
+<div class="sol"><span class="qref">A6.2</span> — <code>type = ALL</code> means a full table scan — every row is examined. Fix by adding an appropriate index on the filtered/joined column(s).</div>
+<div class="sol"><span class="qref">A6.3</span> — REPEATABLE READ.</div>
+<div class="sol"><span class="qref">A6.4</span> — The primary server records every write to a binary log; one or more replica servers continuously read and re-apply that log, keeping their data in sync with the primary, typically used to offload read traffic.</div>
+<div class="sol"><span class="qref">A6.5</span> — A clustered index stores the actual table rows in the same physical order as the index itself, rather than storing a separate pointer to the row. InnoDB always clusters the table by its primary key, so PK lookups are especially fast, and secondary indexes store the PK value to look the full row up afterward.</div>
+
+<h3>Chapter 7 Solutions</h3>
+<div class="sol"><span class="qref">A7.1</span> — JSON stores the value as plain text (re-parsed on every access, no indexing support); JSONB stores it in a parsed binary format that supports indexing (e.g., GIN) and faster querying. Default to JSONB unless you specifically need to preserve exact text formatting/key order.</div>
+<div class="sol"><span class="qref">A7.2</span> — ROW_NUMBER() gives every row a unique, sequential number even for ties. RANK() gives tied rows the same rank but skips the next rank number(s) (e.g., 1,1,3). DENSE_RANK() gives tied rows the same rank without skipping (e.g., 1,1,2).</div>
+<div class="sol"><span class="qref">A7.3</span> — Traversing hierarchical/recursive relationships, like an org chart, category tree, or a graph of connections, where you don't know the depth in advance.</div>
+<div class="sol"><span class="qref">A7.4</span> — Postgres's MVCC creates a new row version on every UPDATE rather than overwriting in place, leaving "dead" old versions behind. VACUUM reclaims that space and updates statistics. MySQL/InnoDB also uses MVCC internally but manages old versions differently (via the undo log, purged automatically), so it doesn't expose an equivalent user-facing VACUUM command.</div>
+<div class="sol"><span class="qref">A7.5</span> — EXPLAIN shows the planner's estimated query plan without running the query. EXPLAIN ANALYZE actually executes the query and reports real elapsed time and row counts alongside the plan, which is far more useful for diagnosing real slowness.</div>
+
+<h3>Chapter 8 Solutions</h3>
+<div class="sol"><span class="qref">A8.1</span> — SQLite runs as an embedded library inside the application process itself, reading/writing a single local file directly — there's no separate server, no network connection, and no concurrent multi-server access.</div>
+<div class="sol"><span class="qref">A8.2</span> — No — you must explicitly run <code>PRAGMA foreign_keys = ON;</code> for each connection; they are off by default for backward compatibility.</div>
+<div class="sol"><span class="qref">A8.3</span> — WAL mode allows readers to keep reading while a single writer writes concurrently (instead of writers blocking all readers), significantly improving concurrent access — most production SQLite deployments enable it.</div>
+<div class="sol"><span class="qref">A8.4</span> — (Any two) Multiple application servers writing over a network to a shared database; workloads with many simultaneous writers; needing database-level user roles/permissions; needing to scale beyond a single machine's disk.</div>
+<div class="sol"><span class="qref">A8.5</span> — Parameterized queries prevent SQL injection (user input is never concatenated directly into the SQL string) and are also generally faster on repeated queries because the database can cache/reuse the query plan.</div>
+
+<h3>Chapter 9 Solutions</h3>
+<div class="sol"><span class="qref">A9.1</span> — SQLite — it's embedded (no server to manage on a phone), ships built into both major mobile OSes, and works well for a single-writer local data store.</div>
+<div class="sol"><span class="qref">A9.2</span> — PostgreSQL — its window functions, CTEs, and native JSONB support make it the strongest fit for mixed analytical + semi-structured needs.</div>
+<div class="sol"><span class="qref">A9.3</span> — When embeddings are a secondary feature of an app that's already relational in Postgres (e.g., adding "similar products" to an e-commerce catalog) — you avoid running and syncing a second database system entirely.</div>
+
+<h3>Chapter 10 Solutions</h3>
+<div class="sol"><span class="qref">A10.1</span> — A B-Tree; it gives roughly O(log n) lookup time instead of O(n) for a full scan.</div>
+<div class="sol"><span class="qref">A10.2</span> — Every index adds overhead on every INSERT/UPDATE/DELETE (the index must be maintained too) and consumes extra disk space, so unused indexes are pure cost with no benefit.</div>
+<div class="sol"><span class="qref">A10.3</span> — Queries filtering on <code>a</code> alone, or on <code>a</code> AND <code>b</code> together (the "leftmost prefix"). A query filtering on <code>b</code> alone generally can't use this index efficiently.</div>
+<div class="sol"><span class="qref">A10.4</span> — Running one query to get a list, then one additional query per item in a loop (N extra queries). Fix by batching with a single <code>WHERE id IN (...)</code> query or a JOIN instead of looping.</div>
+<div class="sol"><span class="qref">A10.5</span> — The database can't apply the index's precomputed sort order to a value it must first transform at query time — it would have to compute the function for every row, defeating the purpose of the index. Rewriting as a plain range comparison on the raw column lets the index be used directly.</div>
+
+<h3>Chapter 11 Solutions</h3>
+<div class="sol"><span class="qref">A11.1</span> — Atomicity: all steps of a transaction happen, or none do. Consistency: a transaction only moves the database between valid states, respecting all constraints. Isolation: concurrent transactions don't interfere with each other's intermediate state. Durability: once committed, changes survive a crash.</div>
+<div class="sol"><span class="qref">A11.2</span> — A dirty read sees another transaction's <em>uncommitted</em> change (which might later be rolled back). A non-repeatable read sees a value change between two reads within the same transaction because another transaction <em>committed</em> a change in between.</div>
+<div class="sol"><span class="qref">A11.3</span> — MySQL (InnoDB) defaults to REPEATABLE READ; PostgreSQL defaults to READ COMMITTED.</div>
+<div class="sol"><span class="qref">A11.4</span> — Pessimistic locking grabs a lock upfront and holds it for the duration (e.g., <code>SELECT ... FOR UPDATE</code>), blocking other transactions — safe but can hurt throughput under contention. Optimistic locking assumes conflicts are rare: it reads data with a version number, and only checks at write time whether the version changed, retrying if a conflict occurred — better throughput under low contention.</div>
+<div class="sol"><span class="qref">A11.5</span> — A deadlock is when two (or more) transactions each hold a lock the other is waiting for, so neither can proceed. The database detects the cycle and automatically rolls back one of the transactions to break it; the application should catch that error and retry.</div>
+
+<h3>Chapter 12 Solutions</h3>
+<div class="sol"><span class="qref">A12.1</span> — A numeric vector produced by a machine learning model that captures the meaning of a piece of content, such that semantically similar content produces numerically close vectors.</div>
+<div class="sol"><span class="qref">A12.2</span> — A B-Tree is built for exact-match/range lookups on ordered scalar values, not for measuring distance/similarity across many dimensions simultaneously — there's no natural "sort order" for high-dimensional vectors that a B-Tree could exploit.</div>
+<div class="sol"><span class="qref">A12.3</span> — A table.</div>
+<div class="sol"><span class="qref">A12.4</span> — (1) Chunk and embed your source documents, storing them in a vector database. (2) Embed the user's question. (3) Retrieve the top-k most similar chunks. (4) Pass those chunks plus the question to an LLM so it answers grounded in that retrieved context.</div>
+<div class="sol"><span class="qref">A12.5</span> — When your app is already relational in Postgres and vector search is a secondary/supporting feature rather than the primary workload — it avoids operating a second database system.</div>
+
+<h3>Chapter 13 (Final) Solutions</h3>
+<div class="sol"><span class="qref">AF.1</span> — <code>SELECT MIN(salary) FROM (SELECT DISTINCT salary FROM employees ORDER BY salary DESC LIMIT 3) t;</code> — or, using a subquery approach: <code>SELECT MAX(salary) FROM employees WHERE salary NOT IN (SELECT MAX(salary) FROM employees UNION SELECT MAX(salary) FROM employees WHERE salary &lt; (SELECT MAX(salary) FROM employees));</code> (the DISTINCT + LIMIT version above is the cleaner one to say out loud).</div>
+<div class="sol"><span class="qref">AF.2</span> — <code>SELECT department, AVG(salary) FROM employees GROUP BY department HAVING COUNT(*) &gt; 2;</code></div>
+<div class="sol"><span class="qref">AF.3</span> — MySQL and PostgreSQL are both full relational database servers for structured data — MySQL is simpler and extremely common in web apps, PostgreSQL has deeper advanced features. SQLite is a lightweight embedded database with no server, ideal for local/mobile apps. ChromaDB is a different category entirely — it stores AI embeddings and searches by meaning/similarity instead of exact values.</div>
+<div class="sol"><span class="qref">AF.4</span> — A clustered index physically orders the table's rows to match the index (a table can have only one, usually the primary key). A non-clustered/secondary index is a separate structure that stores index-column values plus a pointer (or, in InnoDB, the primary key) back to the actual row — a table can have many of these.</div>
+<div class="sol"><span class="qref">AF.5</span> — Structured relational tables (Postgres/MySQL) for tickets, users, statuses, timestamps, and relationships between them; a vector database (Chroma or pgvector) holding embedded chunks of support documentation/knowledge-base articles for semantic retrieval; the chatbot backend queries the relational DB for ticket context and the vector store for relevant documentation, then combines both into the LLM prompt (a RAG pattern layered on top of normal relational data).</div>
+
+<p class="back-to-top"><a href="#toc">↑ Back to Table of Contents</a></p>
+
+<hr>
+<p style="text-align:center; color:var(--muted); font-family:'Segoe UI',Helvetica,Arial,sans-serif; font-size:0.9em; margin-top:60px;">
+End of book. Revisit weak chapters, redo the practical exercises hands-on (not just reading), and re-attempt the tests from memory a few days later — that's what actually sticks for interviews. Good luck, Saqlain.
+</p>
+
+</div>
+</body>
+</html>

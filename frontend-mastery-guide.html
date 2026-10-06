@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontend Mastery — From Zero to Interview-Ready</title>
+<style>
+:root{
+  --bg:#0e1116;
+  --bg-panel:#141821;
+  --bg-card:#171c26;
+  --bg-code:#0b0e13;
+  --border:#242b38;
+  --text:#dbe2ef;
+  --text-dim:#8a94a6;
+  --text-faint:#5c6577;
+  --accent:#5eb1ff;
+  --accent-2:#7ee8b8;
+  --accent-3:#ffb454;
+  --danger:#ff8383;
+  --radius:10px;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:20px;}
+body{
+  margin:0; background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:16px; line-height:1.65;
+}
+::selection{background:#2a5580;}
+
+/* Layout */
+.shell{display:flex; min-height:100vh;}
+.sidebar{
+  width:280px; flex-shrink:0; background:var(--bg-panel); border-right:1px solid var(--border);
+  position:sticky; top:0; height:100vh; overflow-y:auto; padding:20px 14px 40px;
+}
+.sidebar-brand{padding:6px 8px 18px; border-bottom:1px solid var(--border); margin-bottom:14px;}
+.sidebar-brand .k{font-family:var(--mono); font-size:12px; color:var(--accent-2); letter-spacing:.03em;}
+.sidebar-brand h1{font-size:17px; margin:6px 0 4px; line-height:1.3;}
+.sidebar-brand p{font-size:12.5px; color:var(--text-dim); margin:0;}
+#search{
+  width:100%; padding:9px 11px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg-card); color:var(--text); font-size:13px; margin-bottom:14px; font-family:var(--sans);
+}
+#search:focus{outline:none; border-color:var(--accent);}
+.nav-group{margin-bottom:2px;}
+.nav-link{
+  display:block; padding:8px 10px; border-radius:7px; color:var(--text-dim); text-decoration:none;
+  font-size:13.5px; cursor:pointer; border-left:2px solid transparent;
+}
+.nav-link:hover{background:var(--bg-card); color:var(--text);}
+.nav-link.active{background:#182233; color:var(--accent); border-left-color:var(--accent);}
+.nav-num{font-family:var(--mono); color:var(--text-faint); font-size:11px; margin-right:6px;}
+
+main{flex:1; min-width:0; padding:48px 56px 120px; max-width:900px;}
+.progress-bar{position:fixed; top:0; left:280px; right:0; height:3px; background:transparent; z-index:50;}
+.progress-bar i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); transition:width .1s;}
+
+.chapter{display:none;}
+.chapter.active{display:block;}
+.chapter-head{margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid var(--border);}
+.chapter-tag{font-family:var(--mono); font-size:12px; color:var(--accent-2);}
+.chapter-head h2{font-size:30px; margin:8px 0 10px; letter-spacing:-0.01em;}
+.chapter-head .desc{color:var(--text-dim); font-size:15px; max-width:640px;}
+
+h3{font-size:20px; margin:38px 0 12px; color:var(--text);}
+h4{font-size:16px; margin:24px 0 8px; color:var(--accent);}
+p{color:#c3cbdb; max-width:720px;}
+ul,ol{color:#c3cbdb; max-width:700px; padding-left:22px;}
+li{margin:5px 0;}
+strong{color:var(--text); font-weight:600;}
+code.inline{
+  font-family:var(--mono); background:#1c2330; color:var(--accent-2); padding:2px 6px;
+  border-radius:4px; font-size:0.87em;
+}
+a{color:var(--accent);}
+
+pre{
+  background:var(--bg-code); border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px 18px; overflow-x:auto; margin:14px 0 22px; position:relative;
+}
+pre code{font-family:var(--mono); font-size:13.2px; line-height:1.6; color:#d6dce8; white-space:pre;}
+.tok-kw{color:#c792ea;} .tok-str{color:#7ee8b8;} .tok-com{color:#5c6577; font-style:italic;}
+.tok-fn{color:#5eb1ff;} .tok-num{color:#ffb454;} .tok-tag{color:#ff8383;}
+
+.example-box{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px 20px; margin:16px 0 24px;
+}
+.example-box .lbl{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-3); margin-bottom:10px;}
+
+.callout{
+  border-left:3px solid var(--accent); background:#12283d; border-radius:6px;
+  padding:12px 16px; margin:16px 0; font-size:14.5px; color:#c9dcf0;
+}
+.callout.warn{border-left-color:var(--danger); background:#3a1e22; color:#f0c9c9;}
+.callout.tip{border-left-color:var(--accent-2); background:#12362d; color:#c9f0e0;}
+
+.qa{
+  border:1px solid var(--border); border-radius:8px; margin:10px 0; overflow:hidden; background:var(--bg-card);
+}
+.qa summary{
+  padding:12px 16px; cursor:pointer; font-size:14.5px; color:var(--text); list-style:none; position:relative;
+  padding-right:34px;
+}
+.qa summary::-webkit-details-marker{display:none;}
+.qa summary::after{content:"+"; position:absolute; right:16px; top:11px; color:var(--text-faint); font-size:16px;}
+.qa[open] summary::after{content:"−";}
+.qa .a{padding:2px 16px 16px; color:#b7c1d4; font-size:14px; border-top:1px solid var(--border); margin-top:2px; padding-top:12px;}
+
+.task-list{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; margin:16px 0;}
+.task-list .lbl{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); margin-bottom:10px;}
+.task-list li{margin:8px 0;}
+.diff{display:inline-block; font-size:10.5px; font-family:var(--mono); padding:1px 6px; border-radius:4px; margin-right:6px;}
+.diff.easy{background:#123a2a; color:#7ee8b8;}
+.diff.med{background:#3a2f12; color:#ffb454;}
+.diff.hard{background:#3a1414; color:#ff8383;}
+
+table{border-collapse:collapse; width:100%; margin:14px 0 24px; font-size:14px;}
+th,td{border:1px solid var(--border); padding:8px 12px; text-align:left;}
+th{background:var(--bg-card); color:var(--accent-2); font-weight:600; font-size:13px;}
+td{color:#c3cbdb;}
+
+.chapnav{display:flex; justify-content:space-between; margin-top:48px; padding-top:20px; border-top:1px solid var(--border);}
+.chapnav button{
+  background:var(--bg-card); border:1px solid var(--border); color:var(--text); padding:10px 16px;
+  border-radius:8px; cursor:pointer; font-size:13.5px; font-family:var(--sans);
+}
+.chapnav button:hover{border-color:var(--accent);}
+.chapnav button:disabled{opacity:.3; cursor:default;}
+
+.hero{padding:0 0 10px;}
+.hero .k{font-family:var(--mono); font-size:12.5px; color:var(--accent-2);}
+.hero h2{font-size:34px; margin:10px 0 14px;}
+.roadmap-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:24px 0;}
+.roadmap-grid .rm-item{background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:13.5px; cursor:pointer;}
+.roadmap-grid .rm-item:hover{border-color:var(--accent);}
+.roadmap-grid .rm-item b{display:block; color:var(--accent); font-size:12px; font-family:var(--mono); margin-bottom:3px;}
+
+@media (max-width: 900px){
+  .sidebar{position:fixed; left:-300px; z-index:100; transition:left .2s; box-shadow:0 0 40px rgba(0,0,0,.5);}
+  .sidebar.open{left:0;}
+  .progress-bar{left:0;}
+  main{padding:60px 20px 100px;}
+  #menuBtn{display:flex !important;}
+  .roadmap-grid{grid-template-columns:1fr;}
+}
+#menuBtn{
+  display:none; position:fixed; top:14px; left:14px; z-index:110; width:38px; height:38px;
+  background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text);
+  align-items:center; justify-content:center; cursor:pointer; font-size:18px;
+}
+footer.note{margin-top:60px; padding-top:20px; border-top:1px solid var(--border); color:var(--text-faint); font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<button id="menuBtn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+<div class="progress-bar"><i id="progressFill"></i></div>
+
+<div class="shell">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="k">// frontend-mastery.guide</div>
+      <h1>Frontend Mastery</h1>
+      <p>JS → TS → React → Next.js → Express → Tailwind → UI/UX → Interview-ready</p>
+    </div>
+    <input id="search" type="text" placeholder="Search chapters...">
+    <div id="navList"></div>
+  </nav>
+
+  <main id="main">
+    <section class="chapter" id="ch00" data-title="Start Here — Roadmap">
+  <div class="hero">
+    <div class="k">// 00 · orientation</div>
+    <h2>Start Here — How to use this guide</h2>
+    <p class="desc" style="max-width:680px">This is a complete, self-contained frontend curriculum: theory + code + interview Q&A + tasks, chapter by chapter, basic → advanced. Work top to bottom, or jump straight to a topic from the sidebar — your place is saved automatically.</p>
+  </div>
+
+  <h3>What "job-ready" actually means</h3>
+  <p>A hireable frontend developer can do four things, and this guide is structured around them:</p>
+  <ol>
+    <li><strong>Write correct, idiomatic code</strong> in JS, TypeScript, React — fluently, not by copying Stack Overflow.</li>
+    <li><strong>Translate a design into pixels</strong> — spacing, type scale, layout systems, responsive behavior, matching a Figma file exactly.</li>
+    <li><strong>Reason about the system</strong> — rendering, state, data flow, the browser event loop, network requests, build tooling.</li>
+    <li><strong>Debug and optimize</strong> — read a stack trace, profile a slow render, explain a memory leak, justify a technical decision out loud.</li>
+  </ol>
+
+  <h3>Suggested order</h3>
+  <div class="roadmap-grid">
+    <div class="rm-item" onclick="showChapter('ch01')"><b>01</b>HTML &amp; CSS Foundations</div>
+    <div class="rm-item" onclick="showChapter('ch02')"><b>02</b>Responsive &amp; Adaptive UI</div>
+    <div class="rm-item" onclick="showChapter('ch03')"><b>03</b>JavaScript Fundamentals</div>
+    <div class="rm-item" onclick="showChapter('ch04')"><b>04</b>JavaScript Advanced</div>
+    <div class="rm-item" onclick="showChapter('ch05')"><b>05</b>TypeScript</div>
+    <div class="rm-item" onclick="showChapter('ch06')"><b>06</b>React Fundamentals</div>
+    <div class="rm-item" onclick="showChapter('ch07')"><b>07</b>React Advanced</div>
+    <div class="rm-item" onclick="showChapter('ch08')"><b>08</b>Next.js</div>
+    <div class="rm-item" onclick="showChapter('ch09')"><b>09</b>Express.js &amp; Backend Basics</div>
+    <div class="rm-item" onclick="showChapter('ch10')"><b>10</b>Tailwind CSS</div>
+    <div class="rm-item" onclick="showChapter('ch11')"><b>11</b>UI/UX Principles for Developers</div>
+    <div class="rm-item" onclick="showChapter('ch12')"><b>12</b>Debugging Frontend Issues</div>
+    <div class="rm-item" onclick="showChapter('ch13')"><b>13</b>Performance Optimization</div>
+    <div class="rm-item" onclick="showChapter('ch14')"><b>14</b>Interview Question Bank</div>
+  </div>
+
+  <h3>How each chapter is built</h3>
+  <ul>
+    <li><strong>Theory</strong> — plain-language explanation of the concept, not just syntax.</li>
+    <li><strong>Example</strong> — runnable code showing the concept in context.</li>
+    <li><strong>Interview Q&amp;A</strong> — click to reveal the answer. Try answering out loud before you click.</li>
+    <li><strong>Tasks</strong> — problems tagged Easy / Medium / Hard so you can gauge how far you've progressed. Do these — reading is not the same as knowing.</li>
+  </ul>
+
+  <div class="callout tip">
+    <strong>How to actually learn this:</strong> for every chapter, close the guide and rebuild one example from memory before moving on. Recall is what interviews test — not recognition.
+  </div>
+
+  <div class="chapnav">
+    <button disabled>← Previous</button>
+    <button onclick="nextChapter('ch00')">Next: HTML &amp; CSS Foundations →</button>
+  </div>
+</section>
+<section class="chapter" id="ch01" data-title="HTML &amp; CSS Foundations">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 01 · foundations</div>
+    <h2>HTML &amp; CSS Foundations</h2>
+    <p class="desc">Semantic HTML, the box model, layout systems (Flexbox &amp; Grid), spacing systems, and typography — the raw material every UI is built from.</p>
+  </div>
+
+  <h3>1. Semantic HTML</h3>
+  <p>Semantic tags describe <em>meaning</em>, not just appearance. Screen readers, SEO crawlers, and other developers all rely on this meaning. A <code class="inline">&lt;div&gt;</code> tells nothing; a <code class="inline">&lt;nav&gt;</code> tells everything.</p>
+  <div class="example-box">
+    <div class="lbl">Example</div>
+    <pre><code><span class="tok-tag">&lt;header&gt;</span>
+  <span class="tok-tag">&lt;nav&gt;</span>
+    <span class="tok-tag">&lt;ul&gt;</span>
+      <span class="tok-tag">&lt;li&gt;&lt;a</span> href=<span class="tok-str">"/"</span><span class="tok-tag">&gt;</span>Home<span class="tok-tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tok-tag">&lt;/ul&gt;</span>
+  <span class="tok-tag">&lt;/nav&gt;</span>
+<span class="tok-tag">&lt;/header&gt;</span>
+<span class="tok-tag">&lt;main&gt;</span>
+  <span class="tok-tag">&lt;article&gt;</span>
+    <span class="tok-tag">&lt;h1&gt;</span>Post title<span class="tok-tag">&lt;/h1&gt;</span>
+    <span class="tok-tag">&lt;p&gt;</span>Body copy...<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/article&gt;</span>
+<span class="tok-tag">&lt;/main&gt;</span>
+<span class="tok-tag">&lt;footer&gt;</span>&lt;/footer&gt;</code></pre>
+  </div>
+
+  <h3>2. The Box Model</h3>
+  <p>Every element is a box made of <strong>content → padding → border → margin</strong>. The single most important CSS reset:</p>
+  <div class="example-box">
+    <pre><code><span class="tok-tag">*</span> { <span class="tok-fn">box-sizing</span>: <span class="tok-kw">border-box</span>; }</code></pre>
+  </div>
+  <p>With <code class="inline">border-box</code>, <code class="inline">width</code> includes padding and border — so a <code class="inline">width: 200px</code> box stays 200px even after you add padding. Without it (the default <code class="inline">content-box</code>), padding adds <em>on top of</em> the width, which is almost never what you want.</p>
+
+  <h3>3. Layout: Flexbox</h3>
+  <p>Flexbox is for <strong>one-dimensional</strong> layout — a row or a column. Use it for nav bars, button groups, card headers, centering.</p>
+  <div class="example-box">
+    <div class="lbl">Example — a header with logo left, nav right</div>
+    <pre><code>.header {
+  <span class="tok-fn">display</span>: flex;
+  <span class="tok-fn">justify-content</span>: space-between; <span class="tok-com">/* main axis */</span>
+  <span class="tok-fn">align-items</span>: center;          <span class="tok-com">/* cross axis */</span>
+  <span class="tok-fn">gap</span>: 24px;
+}
+.nav-links { <span class="tok-fn">display</span>: flex; <span class="tok-fn">gap</span>: 16px; }</code></pre>
+  </div>
+  <table>
+    <tr><th>Property</th><th>Controls</th></tr>
+    <tr><td><code class="inline">justify-content</code></td><td>alignment along the main axis (row → horizontal)</td></tr>
+    <tr><td><code class="inline">align-items</code></td><td>alignment along the cross axis (row → vertical)</td></tr>
+    <tr><td><code class="inline">flex: 1</code></td><td>child grows to fill remaining space</td></tr>
+    <tr><td><code class="inline">flex-wrap: wrap</code></td><td>items drop to a new line instead of overflowing</td></tr>
+  </table>
+
+  <h3>4. Layout: CSS Grid</h3>
+  <p>Grid is for <strong>two-dimensional</strong> layout — rows AND columns together. Use it for page shells, image galleries, dashboards.</p>
+  <div class="example-box">
+    <div class="lbl">Example — a classic app shell</div>
+    <pre><code>.app {
+  <span class="tok-fn">display</span>: grid;
+  <span class="tok-fn">grid-template-columns</span>: 240px 1fr;
+  <span class="tok-fn">grid-template-rows</span>: 64px 1fr;
+  <span class="tok-fn">grid-template-areas</span>:
+    <span class="tok-str">"sidebar header"</span>
+    <span class="tok-str">"sidebar main"</span>;
+  <span class="tok-fn">min-height</span>: 100vh;
+}
+.sidebar { <span class="tok-fn">grid-area</span>: sidebar; }
+.header  { <span class="tok-fn">grid-area</span>: header; }
+.main    { <span class="tok-fn">grid-area</span>: main; }</code></pre>
+  </div>
+  <div class="callout tip"><strong>Rule of thumb:</strong> reach for Flexbox first. Reach for Grid the moment you catch yourself nesting flex containers to fake a 2D layout.</div>
+
+  <h3>5. Spacing systems</h3>
+  <p>Never use arbitrary pixel values (7px, 13px, 22px). Professional UIs use a <strong>spacing scale</strong> — a fixed set of values, usually multiples of 4 or 8 — applied consistently to padding, margin, and gap. This is what makes a UI "feel" designed instead of accidental.</p>
+  <div class="example-box">
+    <pre><code>:root {
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
+  --space-4: 16px;  --space-5: 24px;  --space-6: 32px;
+  --space-7: 48px;  --space-8: 64px;
+}
+.card { <span class="tok-fn">padding</span>: <span class="tok-kw">var</span>(--space-5); <span class="tok-fn">gap</span>: <span class="tok-kw">var</span>(--space-3); }</code></pre>
+  </div>
+  <p><strong>Why it matters in an interview:</strong> being able to say "I use an 8px spacing scale, so paddings are 8/16/24/32" signals you think like a design-systems engineer, not someone eyeballing pixels.</p>
+
+  <h3>6. Typography</h3>
+  <ul>
+    <li><strong>Type scale</strong> — a fixed ramp of font sizes (e.g. 12/14/16/20/24/32/48px), usually following a ratio like 1.25 (major third). Don't invent a new size per component.</li>
+    <li><strong>Line-height</strong> — body text: 1.5–1.6. Headings: 1.1–1.3 (tighter, because long lines of large text look loose otherwise).</li>
+    <li><strong>Line length</strong> — keep body paragraphs to 45–75 characters per line (~<code class="inline">max-width: 65ch</code>) for readability.</li>
+    <li><strong>Font weight</strong> — use weight, not just size, to build hierarchy: a 14px/600 label can outrank a 16px/400 paragraph.</li>
+  </ul>
+  <div class="example-box">
+    <pre><code>:root {
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;    --text-4xl: 2.5rem;
+}
+body { <span class="tok-fn">font-size</span>: <span class="tok-kw">var</span>(--text-base); <span class="tok-fn">line-height</span>: 1.55; }
+h1 { <span class="tok-fn">font-size</span>: <span class="tok-kw">var</span>(--text-4xl); <span class="tok-fn">line-height</span>: 1.15; <span class="tok-fn">font-weight</span>: 700; }
+p  { <span class="tok-fn">max-width</span>: 65ch; }</code></pre>
+  </div>
+
+  <h3>7. Positioning &amp; stacking</h3>
+  <table>
+    <tr><th>Value</th><th>Behavior</th></tr>
+    <tr><td><code class="inline">static</code></td><td>default; ignores top/left/z-index</td></tr>
+    <tr><td><code class="inline">relative</code></td><td>offsets from its own normal position; becomes an anchor for absolute children</td></tr>
+    <tr><td><code class="inline">absolute</code></td><td>removed from flow; positioned relative to nearest positioned ancestor</td></tr>
+    <tr><td><code class="inline">fixed</code></td><td>positioned relative to the viewport, ignores scroll</td></tr>
+    <tr><td><code class="inline">sticky</code></td><td>relative until a scroll threshold, then behaves fixed within its parent</td></tr>
+  </table>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What's the difference between <code class="inline">content-box</code> and <code class="inline">border-box</code>?</summary><div class="a">With <code class="inline">content-box</code> (default), width/height apply only to the content area — padding and border add extra size. With <code class="inline">border-box</code>, width/height include padding and border, so the element's rendered size matches what you set. Almost every real project applies <code class="inline">box-sizing: border-box</code> globally.</div></details>
+  <details class="qa"><summary>Flexbox vs Grid — when do you use which?</summary><div class="a">Flexbox for one-dimensional layout (align items in a row or column, distribute space along one axis). Grid for two-dimensional layout (rows and columns together, e.g. a page shell or a gallery). They're complementary — Grid for the page skeleton, Flexbox inside individual components.</div></details>
+  <details class="qa"><summary>Explain <code class="inline">z-index</code> and stacking context.</summary><div class="a"><code class="inline">z-index</code> only works on positioned elements (not <code class="inline">static</code>) and only compares within the same stacking context. A new stacking context is created by things like <code class="inline">position</code> + <code class="inline">z-index</code>, <code class="inline">opacity &lt; 1</code>, <code class="inline">transform</code>, or <code class="inline">will-change</code>. A high z-index inside a low-z-index stacking context still loses to a sibling context — this trips people up constantly.</div></details>
+  <details class="qa"><summary>Why prefer <code class="inline">rem</code> over <code class="inline">px</code> for font sizes?</summary><div class="a"><code class="inline">rem</code> is relative to the root font-size, so it respects the user's browser accessibility settings (increasing default text size). <code class="inline">px</code> is fixed and ignores user preference, hurting accessibility.</div></details>
+  <details class="qa"><summary>What is the CSS cascade, and how is specificity calculated?</summary><div class="a">When multiple rules target the same element, the browser resolves conflicts by: (1) importance (<code class="inline">!important</code> wins), (2) specificity — inline styles &gt; IDs &gt; classes/attributes/pseudo-classes &gt; elements, (3) source order — later rules win ties. Specificity is often expressed as a tuple (inline, IDs, classes, elements).</div></details>
+  <details class="qa"><summary>What's the difference between <code class="inline">visibility: hidden</code>, <code class="inline">display: none</code>, and <code class="inline">opacity: 0</code>?</summary><div class="a"><code class="inline">display: none</code> removes the element from layout entirely (no space, not focusable, not read by screen readers). <code class="inline">visibility: hidden</code> keeps its layout space but hides it visually and from interaction. <code class="inline">opacity: 0</code> keeps layout space AND stays interactive/focusable — it's only visually invisible.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Build a semantic page skeleton: header with nav, main with an article, footer.</li>
+      <li><span class="diff easy">Easy</span> Center a div both horizontally and vertically three different ways (flex, grid, absolute+transform).</li>
+      <li><span class="diff med">Medium</span> Build a responsive 3-column pricing card layout using Flexbox that wraps to 1 column on narrow screens.</li>
+      <li><span class="diff med">Medium</span> Recreate a dashboard shell (sidebar + header + content) using CSS Grid template areas.</li>
+      <li><span class="diff hard">Hard</span> Build a sticky header that shrinks in height on scroll, using only CSS <code class="inline">position: sticky</code> plus a small JS scroll listener for the shrink class.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch01')">← Previous</button>
+    <button onclick="nextChapter('ch01')">Next: Responsive &amp; Adaptive UI →</button>
+  </div>
+</section>
+<section class="chapter" id="ch02" data-title="Responsive &amp; Adaptive UI">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 02 · foundations</div>
+    <h2>Responsive &amp; Adaptive UI Design</h2>
+    <p class="desc">Building interfaces that work correctly from a 320px phone to a 4K monitor — mindset, techniques, and the traps that break layouts in interviews.</p>
+  </div>
+
+  <h3>1. Mobile-first vs desktop-first</h3>
+  <p><strong>Mobile-first</strong> means you write the base CSS for the smallest screen, then add complexity with <code class="inline">min-width</code> media queries as the viewport grows. This is the industry default because it forces you to prioritize content, and because Tailwind, Bootstrap, and most modern systems are mobile-first by convention.</p>
+  <div class="example-box">
+    <pre><code>.card { <span class="tok-fn">display</span>: block; } <span class="tok-com">/* mobile default: stacked */</span>
+
+<span class="tok-com">@media (min-width: 768px)</span> {
+  .card { <span class="tok-fn">display</span>: grid; <span class="tok-fn">grid-template-columns</span>: 1fr 1fr; } <span class="tok-com">/* tablet+ */</span>
+}
+<span class="tok-com">@media (min-width: 1200px)</span> {
+  .card { <span class="tok-fn">grid-template-columns</span>: repeat(3, 1fr); } <span class="tok-com">/* desktop */</span>
+}</code></pre>
+  </div>
+
+  <h3>2. Fluid units over fixed pixels</h3>
+  <table>
+    <tr><th>Unit</th><th>Relative to</th><th>Use for</th></tr>
+    <tr><td><code class="inline">%</code></td><td>parent's size</td><td>widths inside containers</td></tr>
+    <tr><td><code class="inline">rem</code></td><td>root font-size</td><td>font sizes, spacing (accessible)</td></tr>
+    <tr><td><code class="inline">em</code></td><td>parent font-size</td><td>spacing that should scale with local text</td></tr>
+    <tr><td><code class="inline">vw / vh</code></td><td>viewport size</td><td>full-bleed hero sections, fluid type</td></tr>
+    <tr><td><code class="inline">ch</code></td><td>width of "0" character</td><td>readable line-length limits</td></tr>
+  </table>
+
+  <h3>3. <code class="inline">clamp()</code> for fluid typography</h3>
+  <p><code class="inline">clamp(min, preferred, max)</code> lets a value scale smoothly with the viewport but never go below or above a bound — no media query needed for type scaling.</p>
+  <div class="example-box">
+    <pre><code>h1 {
+  <span class="tok-fn">font-size</span>: clamp(1.75rem, 4vw + 1rem, 3.5rem);
+}</code></pre>
+  </div>
+
+  <h3>4. Responsive images</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-tag">&lt;img</span>
+  src=<span class="tok-str">"photo-800.jpg"</span>
+  srcset=<span class="tok-str">"photo-400.jpg 400w, photo-800.jpg 800w, photo-1600.jpg 1600w"</span>
+  sizes=<span class="tok-str">"(max-width: 600px) 100vw, 50vw"</span>
+  alt=<span class="tok-str">"Product photo"</span>
+<span class="tok-tag">/&gt;</span></code></pre>
+  </div>
+  <p>The browser picks the smallest image that satisfies the rendered size at the current viewport — saving bandwidth on mobile automatically.</p>
+
+  <h3>5. Container queries (the modern shift)</h3>
+  <p>Media queries respond to the <em>viewport</em>. Container queries respond to the size of a <em>parent container</em> — critical for components (like a card) that get reused in a wide sidebar and a narrow one.</p>
+  <div class="example-box">
+    <pre><code>.card-wrapper { <span class="tok-fn">container-type</span>: inline-size; }
+
+<span class="tok-com">@container (min-width: 400px)</span> {
+  .card { <span class="tok-fn">display</span>: flex; <span class="tok-fn">flex-direction</span>: row; }
+}</code></pre>
+  </div>
+
+  <h3>6. Standard breakpoints to know</h3>
+  <table>
+    <tr><th>Name</th><th>Width</th><th>Typical device</th></tr>
+    <tr><td>sm</td><td>640px</td><td>large phone</td></tr>
+    <tr><td>md</td><td>768px</td><td>tablet</td></tr>
+    <tr><td>lg</td><td>1024px</td><td>small laptop</td></tr>
+    <tr><td>xl</td><td>1280px</td><td>desktop</td></tr>
+    <tr><td>2xl</td><td>1536px</td><td>large desktop</td></tr>
+  </table>
+  <p>(These are Tailwind's defaults, and they're a reasonable industry standard to memorize.)</p>
+
+  <h3>7. Testing responsiveness properly</h3>
+  <ul>
+    <li>Resize the real browser window — don't just trust devtools device presets.</li>
+    <li>Test at odd widths (390px, 720px) not just exact breakpoints — real users land in between.</li>
+    <li>Check text reflow at 200% browser zoom (an accessibility requirement, WCAG 1.4.4).</li>
+    <li>Verify touch targets are ≥ 44×44px on mobile.</li>
+  </ul>
+
+  <div class="callout warn"><strong>Common interview trap:</strong> "How would you build a responsive nav?" — the strong answer isn't just "hamburger menu on mobile." Talk through: what collapses first, how you handle touch targets, whether the menu should be a drawer or a dropdown, and how you'd keep it keyboard-accessible (focus trap, Escape to close).</div>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What's the difference between responsive and adaptive design?</summary><div class="a">Responsive design uses fluid grids and CSS that continuously reflow to any viewport size. Adaptive design serves a small number of fixed layouts targeted at specific breakpoints (like distinct "mobile site" vs "desktop site"). Most modern web apps are responsive; adaptive is more common in native-feeling multi-layout apps.</div></details>
+  <details class="qa"><summary>What does the viewport meta tag do, and why is it required?</summary><div class="a"><code class="inline">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> tells mobile browsers to render the page at the device's actual CSS pixel width instead of a default desktop-width canvas (usually 980px) that gets zoomed out. Without it, media queries never trigger correctly on phones.</div></details>
+  <details class="qa"><summary>How do container queries differ from media queries, and why were they needed?</summary><div class="a">Media queries only know the viewport size, so a reusable component can't adapt to the width of whatever container it's dropped into (a sidebar vs. a main column). Container queries let the component itself respond to its parent's size, making truly reusable, context-aware components possible.</div></details>
+  <details class="qa"><summary>How would you make an image both responsive AND avoid layout shift while it loads?</summary><div class="a">Set explicit <code class="inline">width</code> and <code class="inline">height</code> attributes (or an <code class="inline">aspect-ratio</code> in CSS) so the browser reserves the correct space before the image downloads, combined with <code class="inline">max-width: 100%; height: auto;</code> so it still scales fluidly. This prevents Cumulative Layout Shift (CLS).</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Build a fluid heading using <code class="inline">clamp()</code> that scales from 24px to 48px between 375px and 1440px viewports.</li>
+      <li><span class="diff med">Medium</span> Convert a fixed 3-column desktop layout into a mobile-first responsive layout: 1 col → 2 col (768px) → 3 col (1200px).</li>
+      <li><span class="diff med">Medium</span> Build an accessible responsive nav: hamburger on mobile, full links on desktop, focus-trapped drawer, closes on Escape.</li>
+      <li><span class="diff hard">Hard</span> Build one reusable "card" component that changes from stacked to side-by-side based on its container's width (not the viewport) using container queries.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch02')">← Previous</button>
+    <button onclick="nextChapter('ch02')">Next: JavaScript Fundamentals →</button>
+  </div>
+</section>
+<section class="chapter" id="ch03" data-title="JavaScript Fundamentals">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 03 · javascript</div>
+    <h2>JavaScript Fundamentals</h2>
+    <p class="desc">Variables, types, functions, scope, <code class="inline">this</code>, arrays/objects, and the DOM — the bedrock everything else (React included) is built on.</p>
+  </div>
+
+  <h3>1. <code class="inline">var</code> vs <code class="inline">let</code> vs <code class="inline">const</code></h3>
+  <table>
+    <tr><th></th><th>Scope</th><th>Reassignable</th><th>Hoisting behavior</th></tr>
+    <tr><td><code class="inline">var</code></td><td>function-scoped</td><td>yes</td><td>hoisted &amp; initialized as <code class="inline">undefined</code></td></tr>
+    <tr><td><code class="inline">let</code></td><td>block-scoped</td><td>yes</td><td>hoisted but in "temporal dead zone" until declared</td></tr>
+    <tr><td><code class="inline">const</code></td><td>block-scoped</td><td>no (binding, not value)</td><td>same as let</td></tr>
+  </table>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> user = { name: <span class="tok-str">"Ana"</span> };
+user.name = <span class="tok-str">"Bo"</span>;   <span class="tok-com">// ✅ fine — mutating the object, not reassigning the binding</span>
+user = {};          <span class="tok-com">// ❌ TypeError: Assignment to constant variable.</span></code></pre>
+  </div>
+
+  <h3>2. Scope &amp; closures</h3>
+  <p>A <strong>closure</strong> is a function that "remembers" the variables from where it was defined, even after that outer function has finished running. This is the single most-tested JS concept in interviews.</p>
+  <div class="example-box">
+    <div class="lbl">Example — a counter factory</div>
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">createCounter</span>() {
+  <span class="tok-kw">let</span> count = 0;
+  <span class="tok-kw">return</span> () =&gt; ++count;   <span class="tok-com">// closes over `count`</span>
+}
+<span class="tok-kw">const</span> counter = createCounter();
+counter(); <span class="tok-com">// 1</span>
+counter(); <span class="tok-com">// 2 — state persists between calls, privately</span></code></pre>
+  </div>
+  <div class="callout warn"><strong>Classic gotcha — closures in loops:</strong>
+  <pre style="margin-top:8px"><code><span class="tok-kw">for</span> (<span class="tok-kw">var</span> i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; console.log(i), 0);
+} <span class="tok-com">// prints 3, 3, 3 — var is function-scoped, all closures share one `i`</span>
+
+<span class="tok-kw">for</span> (<span class="tok-kw">let</span> i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; console.log(i), 0);
+} <span class="tok-com">// prints 0, 1, 2 — let creates a new binding per iteration</span></code></pre></div>
+
+  <h3>3. <code class="inline">this</code></h3>
+  <p><code class="inline">this</code> is determined by <strong>how a function is called</strong>, not where it's defined (except for arrow functions, which inherit <code class="inline">this</code> lexically from their enclosing scope).</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> obj = {
+  name: <span class="tok-str">"card"</span>,
+  regular() { <span class="tok-kw">return</span> <span class="tok-kw">this</span>.name; },      <span class="tok-com">// this = obj when called as obj.regular()</span>
+  arrow: () =&gt; <span class="tok-kw">this</span>.name,            <span class="tok-com">// this = outer scope (NOT obj) — likely undefined</span>
+};
+obj.regular(); <span class="tok-com">// "card"</span>
+<span class="tok-kw">const</span> fn = obj.regular;
+fn();            <span class="tok-com">// undefined — called with no receiver, `this` is undefined in strict mode</span></code></pre>
+  </div>
+  <p><code class="inline">.call()</code>, <code class="inline">.apply()</code>, and <code class="inline">.bind()</code> let you explicitly set <code class="inline">this</code>.</p>
+
+  <h3>4. Arrays &amp; objects — the methods you must know cold</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> nums = [1, 2, 3, 4, 5];
+
+nums.map(n =&gt; n * 2);            <span class="tok-com">// [2,4,6,8,10] — transform each item</span>
+nums.filter(n =&gt; n % 2 === 0);   <span class="tok-com">// [2,4] — keep matching items</span>
+nums.reduce((sum, n) =&gt; sum + n, 0); <span class="tok-com">// 15 — fold into one value</span>
+nums.find(n =&gt; n &gt; 3);           <span class="tok-com">// 4 — first match</span>
+nums.some(n =&gt; n &gt; 4);           <span class="tok-com">// true — any match?</span>
+nums.every(n =&gt; n &gt; 0);          <span class="tok-com">// true — all match?</span>
+
+<span class="tok-com">// spread / destructuring</span>
+<span class="tok-kw">const</span> [first, ...rest] = nums;
+<span class="tok-kw">const</span> { name, ...others } = { name: <span class="tok-str">"Ana"</span>, age: 30, city: <span class="tok-str">"NYC"</span> };
+<span class="tok-kw">const</span> merged = { ...defaults, ...overrides };</code></pre>
+  </div>
+  <p><strong>Immutability convention:</strong> in modern JS/React, prefer non-mutating operations — <code class="inline">[...arr, item]</code> not <code class="inline">arr.push(item)</code>; <code class="inline">arr.filter()</code> not <code class="inline">splice()</code> — because React/state libraries detect changes by reference.</p>
+
+  <h3>5. Equality: <code class="inline">==</code> vs <code class="inline">===</code></h3>
+  <p><code class="inline">===</code> (strict equality) compares type <em>and</em> value with no coercion — always prefer it. <code class="inline">==</code> coerces types first, producing surprising results: <code class="inline">'' == 0</code> is <code class="inline">true</code>, <code class="inline">null == undefined</code> is <code class="inline">true</code>.</p>
+
+  <h3>6. Functions: declarations vs expressions vs arrow</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">greet</span>() {}           <span class="tok-com">// declaration — hoisted entirely, usable before definition</span>
+<span class="tok-kw">const</span> greet = <span class="tok-kw">function</span>() {};  <span class="tok-com">// expression — not hoisted with a value</span>
+<span class="tok-kw">const</span> greet = () =&gt; {};      <span class="tok-com">// arrow — no own `this`, no `arguments`, can't be a constructor</span></code></pre>
+  </div>
+
+  <h3>7. The DOM</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> el = document.querySelector(<span class="tok-str">'.card'</span>);
+el.addEventListener(<span class="tok-str">'click'</span>, (e) =&gt; {
+  e.stopPropagation();     <span class="tok-com">// stop bubbling to parent listeners</span>
+  console.log(e.target);   <span class="tok-com">// the element actually clicked</span>
+});
+
+<span class="tok-com">// event delegation — one listener handles many children</span>
+document.querySelector(<span class="tok-str">'.list'</span>).addEventListener(<span class="tok-str">'click'</span>, (e) =&gt; {
+  <span class="tok-kw">if</span> (e.target.matches(<span class="tok-str">'.item'</span>)) { <span class="tok-com">/* handle */</span> }
+});</code></pre>
+  </div>
+  <p><strong>Event bubbling:</strong> events fire on the target, then bubble up through every ancestor. Delegation exploits this — attach one listener to a parent instead of one per child (better performance, works for dynamically-added children).</p>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What is a closure? Give a practical use case.</summary><div class="a">A closure is a function bundled with references to its surrounding lexical scope, so it can access those variables even after the outer function returns. Practical uses: private state (module pattern), memoization caches, debounce/throttle functions, and React hooks themselves rely on closures.</div></details>
+  <details class="qa"><summary>Explain event bubbling vs event capturing.</summary><div class="a">An event travels in three phases: capture (from <code class="inline">window</code> down to the target), target, and bubble (back up to <code class="inline">window</code>). By default, <code class="inline">addEventListener</code> listens on the bubble phase; pass <code class="inline">{ capture: true }</code> to listen during capture instead. Bubbling is what makes event delegation possible.</div></details>
+  <details class="qa"><summary>What's the difference between <code class="inline">null</code> and <code class="inline">undefined</code>?</summary><div class="a"><code class="inline">undefined</code> means a variable has been declared but not assigned a value (or a function returned nothing). <code class="inline">null</code> is an intentional, explicit "no value" assigned by the developer. <code class="inline">typeof undefined === 'undefined'</code>; <code class="inline">typeof null === 'object'</code> (a famous long-standing JS bug).</div></details>
+  <details class="qa"><summary>What does hoisting mean?</summary><div class="a">Before execution, the JS engine scans the scope and registers <code class="inline">var</code> declarations and function declarations. <code class="inline">var</code> is hoisted and initialized to <code class="inline">undefined</code>; function declarations are hoisted with their full body. <code class="inline">let</code>/<code class="inline">const</code> are hoisted but stay in the "temporal dead zone" — accessing them before the declaration line throws a ReferenceError.</div></details>
+  <details class="qa"><summary>How would you deep-clone an object in modern JS?</summary><div class="a"><code class="inline">structuredClone(obj)</code> is the modern built-in answer (handles nested objects, dates, maps — not functions). The older trick <code class="inline">JSON.parse(JSON.stringify(obj))</code> works for plain data but silently drops functions, <code class="inline">undefined</code>, and loses Date/Map types.</div></details>
+  <details class="qa"><summary>Explain <code class="inline">map()</code> vs <code class="inline">forEach()</code>.</summary><div class="a"><code class="inline">map()</code> returns a new array built from the callback's return values — use it when you need the transformed data. <code class="inline">forEach()</code> returns <code class="inline">undefined</code> and is purely for side effects (logging, mutating something external). Using <code class="inline">forEach</code> when you meant <code class="inline">map</code> is a common code-review flag.</div></details>
+  <details class="qa"><summary>What is prototypal inheritance?</summary><div class="a">Every JS object has an internal link (<code class="inline">[[Prototype]]</code>, accessible via <code class="inline">Object.getPrototypeOf</code>) to another object. Property lookups walk up this prototype chain until found or the chain ends at <code class="inline">null</code>. <code class="inline">class</code> syntax is sugar over this same mechanism.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Write a function <code class="inline">once(fn)</code> that only allows <code class="inline">fn</code> to run a single time, using a closure.</li>
+      <li><span class="diff easy">Easy</span> Flatten a nested array without using <code class="inline">Array.flat()</code>.</li>
+      <li><span class="diff med">Medium</span> Implement <code class="inline">debounce(fn, delay)</code> and explain when you'd use it vs <code class="inline">throttle</code>.</li>
+      <li><span class="diff med">Medium</span> Implement your own <code class="inline">Array.prototype.map</code> from scratch called <code class="inline">myMap</code>.</li>
+      <li><span class="diff hard">Hard</span> Implement a basic <code class="inline">EventEmitter</code> class with <code class="inline">on</code>, <code class="inline">off</code>, and <code class="inline">emit</code>.</li>
+      <li><span class="diff hard">Hard</span> Explain and demonstrate the output of: <code class="inline">console.log(1); setTimeout(() => console.log(2)); Promise.resolve().then(() => console.log(3)); console.log(4);</code></li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch03')">← Previous</button>
+    <button onclick="nextChapter('ch03')">Next: JavaScript Advanced →</button>
+  </div>
+</section>
+<section class="chapter" id="ch04" data-title="JavaScript Advanced">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 04 · javascript</div>
+    <h2>JavaScript Advanced</h2>
+    <p class="desc">The event loop, async patterns, modules, and design patterns — the concepts that separate "knows JS" from "reasons about JS."</p>
+  </div>
+
+  <h3>1. The event loop (asked in almost every interview)</h3>
+  <p>JS is single-threaded. The <strong>call stack</strong> runs synchronous code. Async work (timers, network, promises) is handed off to browser/Node APIs, and their callbacks queue up to run later:</p>
+  <ul>
+    <li><strong>Microtask queue</strong> — Promise <code class="inline">.then</code>, <code class="inline">async/await</code>, <code class="inline">queueMicrotask</code>. Runs first, and <em>fully drains</em> before the next step.</li>
+    <li><strong>Macrotask queue</strong> — <code class="inline">setTimeout</code>, <code class="inline">setInterval</code>, I/O. Runs one task per event-loop tick.</li>
+  </ul>
+  <div class="example-box">
+    <pre><code>console.log(<span class="tok-str">'1'</span>);
+setTimeout(() =&gt; console.log(<span class="tok-str">'2'</span>), 0);
+Promise.resolve().then(() =&gt; console.log(<span class="tok-str">'3'</span>));
+console.log(<span class="tok-str">'4'</span>);
+<span class="tok-com">// Output: 1, 4, 3, 2</span>
+<span class="tok-com">// sync code first → microtasks (promise) next → macrotasks (setTimeout) last</span></code></pre>
+  </div>
+
+  <h3>2. Promises &amp; async/await</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">fetchUser</span>(id) {
+  <span class="tok-kw">return</span> <span class="tok-kw">new</span> Promise((resolve, reject) =&gt; {
+    <span class="tok-kw">if</span> (id &lt; 0) reject(<span class="tok-kw">new</span> Error(<span class="tok-str">'invalid id'</span>));
+    <span class="tok-kw">else</span> setTimeout(() =&gt; resolve({ id, name: <span class="tok-str">'Ana'</span> }), 500);
+  });
+}
+
+<span class="tok-com">// async/await — same thing, reads like sync code</span>
+<span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">loadUser</span>(id) {
+  <span class="tok-kw">try</span> {
+    <span class="tok-kw">const</span> user = <span class="tok-kw">await</span> fetchUser(id);
+    <span class="tok-kw">return</span> user;
+  } <span class="tok-kw">catch</span> (err) {
+    console.error(<span class="tok-str">'failed:'</span>, err.message);
+  }
+}
+
+<span class="tok-com">// run requests in PARALLEL, not sequentially</span>
+<span class="tok-kw">const</span> [a, b] = <span class="tok-kw">await</span> Promise.all([fetchUser(1), fetchUser(2)]);</code></pre>
+  </div>
+  <div class="callout warn"><strong>Common mistake:</strong> awaiting inside a loop sequentially when requests are independent — <code class="inline">for (const id of ids) await fetchUser(id)</code> is slow. Use <code class="inline">Promise.all(ids.map(fetchUser))</code> instead to run them concurrently.</div>
+
+  <h3>3. <code class="inline">Promise.all</code> vs <code class="inline">allSettled</code> vs <code class="inline">race</code> vs <code class="inline">any</code></h3>
+  <table>
+    <tr><th>Method</th><th>Resolves when</th><th>Rejects when</th></tr>
+    <tr><td><code class="inline">all</code></td><td>every promise resolves</td><td>any single one rejects (fails fast)</td></tr>
+    <tr><td><code class="inline">allSettled</code></td><td>every promise settles (resolve or reject)</td><td>never — gives you status per item</td></tr>
+    <tr><td><code class="inline">race</code></td><td>first promise to settle (win or lose)</td><td>—</td></tr>
+    <tr><td><code class="inline">any</code></td><td>first promise to resolve</td><td>all reject</td></tr>
+  </table>
+
+  <h3>4. Modules — ESM vs CommonJS</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// ESM (modern, used by React/Vite/Next.js, static analysis-friendly)</span>
+<span class="tok-kw">export</span> <span class="tok-kw">const</span> add = (a, b) =&gt; a + b;
+<span class="tok-kw">import</span> { add } <span class="tok-kw">from</span> <span class="tok-str">'./math.js'</span>;
+
+<span class="tok-com">// CommonJS (Node's older/default system)</span>
+module.exports = { add };
+<span class="tok-kw">const</span> { add } = require(<span class="tok-str">'./math'</span>);</code></pre>
+  </div>
+
+  <h3>5. Design patterns you'll actually use</h3>
+  <h4>Debounce &amp; throttle</h4>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">debounce</span>(fn, delay) {
+  <span class="tok-kw">let</span> timer;
+  <span class="tok-kw">return</span> (...args) =&gt; {
+    clearTimeout(timer);
+    timer = setTimeout(() =&gt; fn(...args), delay);
+  };
+} <span class="tok-com">// waits for a pause — great for search-as-you-type</span>
+
+<span class="tok-kw">function</span> <span class="tok-fn">throttle</span>(fn, limit) {
+  <span class="tok-kw">let</span> waiting = <span class="tok-kw">false</span>;
+  <span class="tok-kw">return</span> (...args) =&gt; {
+    <span class="tok-kw">if</span> (waiting) <span class="tok-kw">return</span>;
+    fn(...args);
+    waiting = <span class="tok-kw">true</span>;
+    setTimeout(() =&gt; waiting = <span class="tok-kw">false</span>, limit);
+  };
+} <span class="tok-com">// runs at most once per interval — great for scroll/resize handlers</span></code></pre>
+  </div>
+  <h4>Module / factory / observer patterns</h4>
+  <p>Modules (via ESM) give you privacy by closure. The <strong>observer pattern</strong> — objects subscribing to notifications — is the foundation of state management libraries (Redux, Zustand) and even React's own re-render mechanism.</p>
+
+  <h3>6. <code class="inline">try/catch</code>, custom errors, and error boundaries at the JS level</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">class</span> <span class="tok-fn">ApiError</span> <span class="tok-kw">extends</span> Error {
+  <span class="tok-fn">constructor</span>(message, status) {
+    <span class="tok-kw">super</span>(message);
+    <span class="tok-kw">this</span>.status = status;
+    <span class="tok-kw">this</span>.name = <span class="tok-str">'ApiError'</span>;
+  }
+}
+<span class="tok-kw">try</span> {
+  <span class="tok-kw">throw</span> <span class="tok-kw">new</span> ApiError(<span class="tok-str">'Not found'</span>, 404);
+} <span class="tok-kw">catch</span> (e) {
+  <span class="tok-kw">if</span> (e <span class="tok-kw">instanceof</span> ApiError) console.log(e.status);
+}</code></pre>
+  </div>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>Walk through the event loop with an example mixing setTimeout and Promises.</summary><div class="a">Synchronous code always runs first (the call stack). When it finishes, the engine drains the entire microtask queue (Promise callbacks) before touching the macrotask queue. Only after microtasks are empty does it run the next macrotask (a setTimeout callback). This is why <code class="inline">Promise.resolve().then()</code> always logs before a <code class="inline">setTimeout(fn, 0)</code>.</div></details>
+  <details class="qa"><summary>What problem do Promises solve that plain callbacks didn't?</summary><div class="a">"Callback hell" — deeply nested, hard-to-read, hard-to-error-handle callbacks. Promises give you flat chaining (<code class="inline">.then().then()</code>), a single standard way to propagate errors (<code class="inline">.catch</code>), and combinators like <code class="inline">Promise.all</code> for coordinating multiple async operations.</div></details>
+  <details class="qa"><summary>Is <code class="inline">async/await</code> synchronous or asynchronous?</summary><div class="a">Still fully asynchronous — <code class="inline">await</code> just pauses execution of that function (not the whole program) until the promise settles, then resumes. It's syntactic sugar over <code class="inline">.then()</code> chains, not a different execution model.</div></details>
+  <details class="qa"><summary>Debounce vs throttle — give a real UI example of each.</summary><div class="a">Debounce delays execution until activity stops (e.g. a search input: wait until the user stops typing for 300ms before firing the API call). Throttle guarantees execution happens at most once per interval regardless of activity (e.g. a scroll handler updating a "read progress" bar at most every 100ms).</div></details>
+  <details class="qa"><summary>What is currying, and why would you use it?</summary><div class="a">Currying transforms a function of multiple arguments into a sequence of functions each taking one argument: <code class="inline">const add = a =&gt; b =&gt; a + b</code>. It enables partial application — pre-filling some arguments to create specialized reusable functions, common in functional composition and libraries like Redux's connect.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Predict the console output order for a mix of sync code, <code class="inline">setTimeout</code>, and <code class="inline">.then()</code> calls (write 3 examples for yourself).</li>
+      <li><span class="diff med">Medium</span> Implement a <code class="inline">retry(fn, attempts)</code> async helper that retries a failing async function up to N times with a delay.</li>
+      <li><span class="diff med">Medium</span> Implement <code class="inline">Promise.all</code> yourself using only <code class="inline">Promise</code> and <code class="inline">.then</code>.</li>
+      <li><span class="diff hard">Hard</span> Build a simple pub/sub <code class="inline">EventBus</code> and use it to decouple two unrelated modules.</li>
+      <li><span class="diff hard">Hard</span> Implement a rate-limited API queue that only allows 3 concurrent requests at a time from a list of 20.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch04')">← Previous</button>
+    <button onclick="nextChapter('ch04')">Next: TypeScript →</button>
+  </div>
+</section>
+<section class="chapter" id="ch05" data-title="TypeScript">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 05 · typescript</div>
+    <h2>TypeScript</h2>
+    <p class="desc">Static typing on top of JavaScript — catches bugs before runtime and is now the default expectation on most frontend teams.</p>
+  </div>
+
+  <h3>1. Why TypeScript</h3>
+  <p>TypeScript compiles to plain JS but adds a type-checking layer during development. It catches typos, wrong argument types, and null/undefined access <em>before</em> you ship — and it powers editor autocomplete, which is a huge productivity win on any team-sized codebase.</p>
+
+  <h3>2. Basic types</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">let</span> age: number = 30;
+<span class="tok-kw">let</span> name: string = <span class="tok-str">"Ana"</span>;
+<span class="tok-kw">let</span> active: boolean = <span class="tok-kw">true</span>;
+<span class="tok-kw">let</span> tags: string[] = [<span class="tok-str">"a"</span>, <span class="tok-str">"b"</span>];
+<span class="tok-kw">let</span> pair: [string, number] = [<span class="tok-str">"x"</span>, 1]; <span class="tok-com">// tuple</span>
+<span class="tok-kw">let</span> id: string | number = 5;              <span class="tok-com">// union</span>
+<span class="tok-kw">let</span> anything: unknown = fetchData();      <span class="tok-com">// safer than `any` — must narrow before use</span></code></pre>
+  </div>
+
+  <h3>3. Interfaces &amp; types</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">interface</span> User {
+  id: number;
+  name: string;
+  email?: string;        <span class="tok-com">// optional property</span>
+  readonly createdAt: Date; <span class="tok-com">// can't be reassigned after creation</span>
+}
+
+<span class="tok-kw">type</span> Status = <span class="tok-str">'idle'</span> | <span class="tok-str">'loading'</span> | <span class="tok-str">'success'</span> | <span class="tok-str">'error'</span>; <span class="tok-com">// union of literals</span>
+
+<span class="tok-kw">function</span> <span class="tok-fn">greet</span>(user: User): string {
+  <span class="tok-kw">return</span> <span class="tok-kw">`Hello ${user.name}`</span>;
+}</code></pre>
+  </div>
+  <p><strong><code class="inline">interface</code> vs <code class="inline">type</code>:</strong> interfaces can be re-opened and extended (declaration merging) and read more naturally for object shapes; <code class="inline">type</code> can express unions, tuples, and mapped types that interfaces can't. Convention: use <code class="inline">interface</code> for object/component-prop shapes, <code class="inline">type</code> for everything else.</p>
+
+  <h3>4. Generics</h3>
+  <p>Generics let a function or type work with any type while still preserving type-safety and relationships between inputs/outputs.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">firstItem</span>&lt;T&gt;(arr: T[]): T | undefined {
+  <span class="tok-kw">return</span> arr[0];
+}
+firstItem([1, 2, 3]);      <span class="tok-com">// inferred as number | undefined</span>
+firstItem([<span class="tok-str">"a"</span>, <span class="tok-str">"b"</span>]);    <span class="tok-com">// inferred as string | undefined</span>
+
+<span class="tok-kw">interface</span> ApiResponse&lt;T&gt; {
+  data: T;
+  error: <span class="tok-kw">string</span> | null;
+}
+<span class="tok-kw">const</span> res: ApiResponse&lt;User&gt; = { data: user, error: null };</code></pre>
+  </div>
+
+  <h3>5. Utility types you'll use constantly</h3>
+  <table>
+    <tr><th>Utility</th><th>What it does</th></tr>
+    <tr><td><code class="inline">Partial&lt;T&gt;</code></td><td>makes every property optional</td></tr>
+    <tr><td><code class="inline">Required&lt;T&gt;</code></td><td>makes every property required</td></tr>
+    <tr><td><code class="inline">Pick&lt;T, 'a'|'b'&gt;</code></td><td>keeps only the listed keys</td></tr>
+    <tr><td><code class="inline">Omit&lt;T, 'a'&gt;</code></td><td>removes the listed keys</td></tr>
+    <tr><td><code class="inline">Record&lt;K, V&gt;</code></td><td>object type with keys K and values V</td></tr>
+    <tr><td><code class="inline">ReturnType&lt;typeof fn&gt;</code></td><td>extracts a function's return type</td></tr>
+  </table>
+
+  <h3>6. Narrowing</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">printId</span>(id: string | number) {
+  <span class="tok-kw">if</span> (<span class="tok-kw">typeof</span> id === <span class="tok-str">'string'</span>) {
+    console.log(id.toUpperCase()); <span class="tok-com">// TS knows id is a string here</span>
+  } <span class="tok-kw">else</span> {
+    console.log(id.toFixed(2));    <span class="tok-com">// TS knows id is a number here</span>
+  }
+}</code></pre>
+  </div>
+
+  <h3>7. Typing React components</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">interface</span> ButtonProps {
+  label: string;
+  onClick: () =&gt; <span class="tok-kw">void</span>;
+  variant?: <span class="tok-str">'primary'</span> | <span class="tok-str">'secondary'</span>;
+  children?: React.ReactNode;
+}
+
+<span class="tok-kw">function</span> <span class="tok-fn">Button</span>({ label, onClick, variant = <span class="tok-str">'primary'</span> }: ButtonProps) {
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;button</span> className={variant} onClick={onClick}<span class="tok-tag">&gt;</span>{label}<span class="tok-tag">&lt;/button&gt;</span>;
+}</code></pre>
+  </div>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary><code class="inline">any</code> vs <code class="inline">unknown</code> — what's the difference?</summary><div class="a"><code class="inline">any</code> disables type checking entirely — you can call anything on it with no error. <code class="inline">unknown</code> is type-safe: you must narrow it (via <code class="inline">typeof</code>, <code class="inline">instanceof</code>, or a type guard) before you're allowed to use it. Prefer <code class="inline">unknown</code> for values of uncertain shape (like API responses).</div></details>
+  <details class="qa"><summary>What is structural typing, and how does TS differ from nominal languages like Java?</summary><div class="a">TypeScript uses structural typing — two types are compatible if they have the same shape, regardless of name or declared inheritance. A Java-style nominal system instead requires explicit inheritance/implementation to consider two types related. This is why an object literal matching an interface's shape is assignable to it even without ever mentioning that interface.</div></details>
+  <details class="qa"><summary>Explain generics in one sentence, with an example of why they beat using <code class="inline">any</code>.</summary><div class="a">Generics let you write a function once that works with many types while preserving the type relationship between input and output — e.g. an array-of-T in, single-T out — whereas <code class="inline">any</code> would compile but lose all type-safety, letting mismatched types slip through undetected.</div></details>
+  <details class="qa"><summary>What does the <code class="inline">satisfies</code> operator do?</summary><div class="a">It checks that a value matches a type without widening or losing the value's more specific inferred type — useful when you want validation against a shape but still want autocomplete/literal-type precision on the resulting value, unlike a direct type annotation which would widen it.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Define an interface for a <code class="inline">Product</code> (id, name, price, optional discount) and a function that computes its final price.</li>
+      <li><span class="diff med">Medium</span> Write a generic <code class="inline">groupBy&lt;T, K&gt;(items: T[], keyFn: (item: T) =&gt; K)</code> function with correct return typing.</li>
+      <li><span class="diff med">Medium</span> Convert a JavaScript React form component to TypeScript, typing all props and the form's state shape.</li>
+      <li><span class="diff hard">Hard</span> Model a discriminated union for an async request state: <code class="inline">{ status: 'idle' } | { status: 'loading' } | { status: 'success', data: T } | { status: 'error', error: string }</code>, and write a function that switches on <code class="inline">status</code> with full type narrowing.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch05')">← Previous</button>
+    <button onclick="nextChapter('ch05')">Next: React Fundamentals →</button>
+  </div>
+</section>
+<section class="chapter" id="ch06" data-title="React Fundamentals">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 06 · react</div>
+    <h2>React Fundamentals</h2>
+    <p class="desc">Components, JSX, props, state, and the render cycle — the mental model everything else in React builds on.</p>
+  </div>
+
+  <h3>1. Why React exists</h3>
+  <p>React lets you describe UI as a function of state: <code class="inline">UI = f(state)</code>. Instead of manually finding DOM nodes and mutating them, you describe what the UI should look like for a given state, and React figures out the minimal DOM changes needed (via the Virtual DOM diff).</p>
+
+  <h3>2. JSX</h3>
+  <p>JSX is syntax sugar that compiles to <code class="inline">React.createElement()</code> calls. It's not a template language — it's JavaScript, so you use <code class="inline">{}</code> to embed real expressions.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">Greeting</span>({ name }) {
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;h1&gt;</span>Hello, {name.toUpperCase()}<span class="tok-tag">&lt;/h1&gt;</span>;
+}
+<span class="tok-com">// compiles to:</span>
+<span class="tok-kw">function</span> <span class="tok-fn">Greeting</span>({ name }) {
+  <span class="tok-kw">return</span> React.createElement(<span class="tok-str">'h1'</span>, null, <span class="tok-str">'Hello, '</span> + name.toUpperCase());
+}</code></pre>
+  </div>
+
+  <h3>3. Components, props, and composition</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">Card</span>({ title, children }) {
+  <span class="tok-kw">return</span> (
+    <span class="tok-tag">&lt;div</span> className=<span class="tok-str">"card"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;h3&gt;</span>{title}<span class="tok-tag">&lt;/h3&gt;</span>
+      {children}
+    <span class="tok-tag">&lt;/div&gt;</span>
+  );
+}
+<span class="tok-com">// usage — composition over configuration</span>
+<span class="tok-tag">&lt;Card</span> title=<span class="tok-str">"Profile"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>Bio text here<span class="tok-tag">&lt;/p&gt;</span>
+<span class="tok-tag">&lt;/Card&gt;</span></code></pre>
+  </div>
+  <p>Props flow <strong>one direction: parent → child</strong>. A child can never directly modify props — it can only call a function the parent passed down (e.g. <code class="inline">onSave</code>), which is how children communicate back up.</p>
+
+  <h3>4. State with <code class="inline">useState</code></h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">import</span> { useState } <span class="tok-kw">from</span> <span class="tok-str">'react'</span>;
+
+<span class="tok-kw">function</span> <span class="tok-fn">Counter</span>() {
+  <span class="tok-kw">const</span> [count, setCount] = useState(0);
+  <span class="tok-kw">return</span> (
+    <span class="tok-tag">&lt;button</span> onClick={() =&gt; setCount(c =&gt; c + 1)}<span class="tok-tag">&gt;</span>
+      Clicked {count} times
+    <span class="tok-tag">&lt;/button&gt;</span>
+  );
+}</code></pre>
+  </div>
+  <div class="callout warn"><strong>Critical rule:</strong> always use the updater-function form <code class="inline">setCount(c =&gt; c + 1)</code> when the new value depends on the old one. <code class="inline">setCount(count + 1)</code> called twice in the same event handler only increments once, because both calls close over the same stale <code class="inline">count</code>.</div>
+
+  <h3>5. State updates are asynchronous &amp; batched</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">handleClick</span>() {
+  setCount(count + 1);
+  console.log(count); <span class="tok-com">// still the OLD value — state hasn't updated yet, re-render is scheduled</span>
+}</code></pre>
+  </div>
+
+  <h3>6. Rendering lists — the <code class="inline">key</code> prop</h3>
+  <div class="example-box">
+    <pre><code>{users.map(user =&gt; (
+  <span class="tok-tag">&lt;UserRow</span> key={user.id} user={user} <span class="tok-tag">/&gt;</span>
+))}</code></pre>
+  </div>
+  <p><code class="inline">key</code> tells React which array item is which across re-renders, so it can preserve component state and DOM nodes correctly instead of re-creating everything. Never use array <em>index</em> as a key if the list can be reordered, filtered, or items inserted/removed — it causes state to attach to the wrong row.</p>
+
+  <h3>7. Conditional rendering &amp; controlled inputs</h3>
+  <div class="example-box">
+    <pre><code>{isLoading ? <span class="tok-tag">&lt;Spinner /&gt;</span> : <span class="tok-tag">&lt;UserList</span> users={users} <span class="tok-tag">/&gt;</span>}
+{error &amp;&amp; <span class="tok-tag">&lt;ErrorBanner</span> message={error} <span class="tok-tag">/&gt;</span>}
+
+<span class="tok-com">// controlled input — React state is the single source of truth</span>
+<span class="tok-kw">function</span> <span class="tok-fn">SearchBox</span>() {
+  <span class="tok-kw">const</span> [query, setQuery] = useState(<span class="tok-str">''</span>);
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;input</span> value={query} onChange={e =&gt; setQuery(e.target.value)} <span class="tok-tag">/&gt;</span>;
+}</code></pre>
+  </div>
+
+  <h3>8. <code class="inline">useEffect</code> — syncing with the outside world</h3>
+  <div class="example-box">
+    <pre><code>useEffect(() =&gt; {
+  <span class="tok-kw">const</span> id = setInterval(() =&gt; setTime(Date.now()), 1000);
+  <span class="tok-kw">return</span> () =&gt; clearInterval(id); <span class="tok-com">// cleanup — runs before next effect & on unmount</span>
+}, []); <span class="tok-com">// dependency array: [] = run once on mount</span>
+
+useEffect(() =&gt; {
+  fetchUser(userId).then(setUser);
+}, [userId]); <span class="tok-com">// re-runs whenever userId changes</span></code></pre>
+  </div>
+  <table>
+    <tr><th>Dependency array</th><th>Runs</th></tr>
+    <tr><td>omitted</td><td>after every single render</td></tr>
+    <tr><td><code class="inline">[]</code></td><td>once, after the first render (like "mount")</td></tr>
+    <tr><td><code class="inline">[a, b]</code></td><td>after mount, and whenever a or b changes</td></tr>
+  </table>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What is the Virtual DOM and why does it help performance?</summary><div class="a">The Virtual DOM is a lightweight JS object tree representing the UI. On state change, React builds a new virtual tree, diffs it against the previous one ("reconciliation"), and applies only the minimal set of real DOM mutations needed — because real DOM writes are expensive, and batching/minimizing them is faster than naive re-rendering everything.</div></details>
+  <details class="qa"><summary>Why does React need a <code class="inline">key</code> prop on list items, and what goes wrong with using the array index?</summary><div class="a">Keys let React match old and new elements across renders to decide what to update, move, or discard. Using the index as a key breaks when items are reordered/inserted/removed — React matches by position, not identity, so component state (like an input's typed value) can end up attached to the wrong data row.</div></details>
+  <details class="qa"><summary>What's the difference between props and state?</summary><div class="a">Props are read-only data passed down from a parent — the component receiving them cannot change them. State is local, mutable (via its setter) data owned and managed by the component itself, and changing it triggers a re-render.</div></details>
+  <details class="qa"><summary>Why is direct state mutation (e.g. <code class="inline">state.items.push(x)</code>) wrong in React?</summary><div class="a">React detects changes by comparing references (<code class="inline">Object.is</code>), not deep equality. Mutating an object/array in place keeps the same reference, so React doesn't know anything changed and won't re-render. You must create a new array/object: <code class="inline">setItems([...items, x])</code>.</div></details>
+  <details class="qa"><summary>What happens if you forget the dependency array in <code class="inline">useEffect</code>?</summary><div class="a">The effect runs after every single render, which usually causes performance problems or infinite loops (especially if the effect itself sets state). Always pass a dependency array — <code class="inline">[]</code> for "run once," or the actual values the effect reads.</div></details>
+  <details class="qa"><summary>Controlled vs uncontrolled components — what's the difference?</summary><div class="a">A controlled component's value lives in React state and is set via <code class="inline">value</code> + <code class="inline">onChange</code> — React is the single source of truth. An uncontrolled component keeps its value in the DOM itself, read on demand via a <code class="inline">ref</code> (<code class="inline">inputRef.current.value</code>). Controlled is preferred for validation/formatting; uncontrolled is simpler for basic forms or file inputs.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Build a toggle button component that switches text between "Show" and "Hide" using <code class="inline">useState</code>.</li>
+      <li><span class="diff easy">Easy</span> Build a controlled form with name + email fields and a submit handler that logs the values.</li>
+      <li><span class="diff med">Medium</span> Build a searchable, filterable list of users (controlled search input filters a rendered list, correct keys used).</li>
+      <li><span class="diff med">Medium</span> Build a component that fetches data on mount, shows a loading state, then the data or an error — using <code class="inline">useEffect</code> correctly with cleanup for a stale request.</li>
+      <li><span class="diff hard">Hard</span> Build a multi-step form wizard (3 steps) that preserves entered data when navigating back and forth between steps.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch06')">← Previous</button>
+    <button onclick="nextChapter('ch06')">Next: React Advanced →</button>
+  </div>
+</section>
+<section class="chapter" id="ch07" data-title="React Advanced">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 07 · react</div>
+    <h2>React Advanced</h2>
+    <p class="desc">Hooks in depth, Context, performance optimization, custom hooks, and the patterns senior React interviews probe for.</p>
+  </div>
+
+  <h3>1. <code class="inline">useRef</code></h3>
+  <p>A ref is a mutable box that persists across renders <em>without</em> triggering a re-render when it changes — used for DOM access or storing a value you don't want to cause a re-render.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">TextInput</span>() {
+  <span class="tok-kw">const</span> inputRef = useRef(null);
+  useEffect(() =&gt; { inputRef.current.focus(); }, []);
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;input</span> ref={inputRef} <span class="tok-tag">/&gt;</span>;
+}
+
+<span class="tok-com">// storing a mutable value across renders (e.g. a previous value, an interval id)</span>
+<span class="tok-kw">const</span> renderCount = useRef(0);
+renderCount.current++; <span class="tok-com">// doesn't cause a re-render, unlike setState</span></code></pre>
+  </div>
+
+  <h3>2. <code class="inline">useContext</code> — avoiding prop drilling</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> ThemeContext = createContext(<span class="tok-str">'light'</span>);
+
+<span class="tok-kw">function</span> <span class="tok-fn">App</span>() {
+  <span class="tok-kw">return</span> (
+    <span class="tok-tag">&lt;ThemeContext.Provider</span> value=<span class="tok-str">"dark"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;Toolbar /&gt;</span>
+    <span class="tok-tag">&lt;/ThemeContext.Provider&gt;</span>
+  );
+}
+<span class="tok-kw">function</span> <span class="tok-fn">Toolbar</span>() {
+  <span class="tok-kw">const</span> theme = useContext(ThemeContext); <span class="tok-com">// no prop drilling through intermediate components</span>
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;div</span> className={theme}<span class="tok-tag">&gt;</span>...<span class="tok-tag">&lt;/div&gt;</span>;
+}</code></pre>
+  </div>
+  <div class="callout warn">Every consumer of a Context re-renders whenever the Provider's value changes — Context is not a performance optimization, it's a plumbing tool. For high-frequency state, use a dedicated state library instead.</div>
+
+  <h3>3. <code class="inline">useReducer</code> — for complex state logic</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">reducer</span>(state, action) {
+  <span class="tok-kw">switch</span> (action.type) {
+    <span class="tok-kw">case</span> <span class="tok-str">'increment'</span>: <span class="tok-kw">return</span> { count: state.count + 1 };
+    <span class="tok-kw">case</span> <span class="tok-str">'reset'</span>: <span class="tok-kw">return</span> { count: 0 };
+    <span class="tok-kw">default</span>: <span class="tok-kw">throw</span> <span class="tok-kw">new</span> Error(<span class="tok-str">'unknown action'</span>);
+  }
+}
+<span class="tok-kw">const</span> [state, dispatch] = useReducer(reducer, { count: 0 });
+dispatch({ type: <span class="tok-str">'increment'</span> });</code></pre>
+  </div>
+  <p>Reach for <code class="inline">useReducer</code> when the next state depends on complex logic across multiple sub-values, or when several event handlers need to update the same state in related ways.</p>
+
+  <h3>4. Performance: <code class="inline">memo</code>, <code class="inline">useMemo</code>, <code class="inline">useCallback</code></h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// memo — skip re-rendering a component if its props haven't changed</span>
+<span class="tok-kw">const</span> Row = React.memo(<span class="tok-kw">function</span> <span class="tok-fn">Row</span>({ user }) {
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;li&gt;</span>{user.name}<span class="tok-tag">&lt;/li&gt;</span>;
+});
+
+<span class="tok-com">// useMemo — cache an expensive CALCULATION between renders</span>
+<span class="tok-kw">const</span> sorted = useMemo(() =&gt; expensiveSort(items), [items]);
+
+<span class="tok-com">// useCallback — cache a FUNCTION reference so memo'd children don't re-render needlessly</span>
+<span class="tok-kw">const</span> handleClick = useCallback(() =&gt; setCount(c =&gt; c + 1), []);</code></pre>
+  </div>
+  <div class="callout tip"><strong>Interview-critical nuance:</strong> <code class="inline">useCallback</code> alone does nothing for performance — it only matters when the function is passed to a <code class="inline">React.memo</code>-wrapped child, because otherwise a new function reference every render would break that child's memoization. Don't wrap everything in <code class="inline">useMemo</code>/<code class="inline">useCallback</code> "just in case" — it has its own overhead and hurts readability.</div>
+
+  <h3>5. Custom hooks</h3>
+  <p>A custom hook is just a function starting with <code class="inline">use</code> that calls other hooks — the mechanism for extracting and reusing stateful logic across components.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">useDebounce</span>(value, delay) {
+  <span class="tok-kw">const</span> [debounced, setDebounced] = useState(value);
+  useEffect(() =&gt; {
+    <span class="tok-kw">const</span> id = setTimeout(() =&gt; setDebounced(value), delay);
+    <span class="tok-kw">return</span> () =&gt; clearTimeout(id);
+  }, [value, delay]);
+  <span class="tok-kw">return</span> debounced;
+}
+<span class="tok-com">// usage</span>
+<span class="tok-kw">const</span> debouncedQuery = useDebounce(query, 300);</code></pre>
+  </div>
+
+  <h3>6. Rendering behavior &amp; the rules of hooks</h3>
+  <ul>
+    <li>Only call hooks at the top level — never inside loops, conditions, or nested functions. React relies on call <em>order</em> to match hook state between renders.</li>
+    <li>Only call hooks from React function components or other custom hooks.</li>
+    <li>A component re-renders when its own state changes, its props change, or its parent re-renders (children re-render by default even with unchanged props, unless memoized).</li>
+  </ul>
+
+  <h3>7. Data fetching pattern &amp; race conditions</h3>
+  <div class="example-box">
+    <pre><code>useEffect(() =&gt; {
+  <span class="tok-kw">let</span> cancelled = <span class="tok-kw">false</span>;
+  fetchUser(id).then(data =&gt; {
+    <span class="tok-kw">if</span> (!cancelled) setUser(data); <span class="tok-com">// avoid setting state after unmount / stale response</span>
+  });
+  <span class="tok-kw">return</span> () =&gt; { cancelled = <span class="tok-kw">true</span>; };
+}, [id]);</code></pre>
+  </div>
+
+  <h3>8. Error boundaries</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">class</span> <span class="tok-fn">ErrorBoundary</span> <span class="tok-kw">extends</span> React.Component {
+  <span class="tok-fn">state</span> = { hasError: <span class="tok-kw">false</span> };
+  <span class="tok-kw">static</span> getDerivedStateFromError() { <span class="tok-kw">return</span> { hasError: <span class="tok-kw">true</span> }; }
+  <span class="tok-fn">render</span>() {
+    <span class="tok-kw">return</span> <span class="tok-kw">this</span>.state.hasError ? <span class="tok-tag">&lt;Fallback /&gt;</span> : <span class="tok-kw">this</span>.props.children;
+  }
+}</code></pre>
+  </div>
+  <p>Error boundaries must currently be class components — there's no hook equivalent — and they only catch errors during rendering, not in event handlers or async code (use try/catch there instead).</p>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>When would you use <code class="inline">useReducer</code> over <code class="inline">useState</code>?</summary><div class="a">When state transitions are complex, involve multiple related sub-values, or the next state depends heavily on the action taken rather than a simple new value — reducers centralize that transition logic in one place and make state changes more predictable and testable, similar to Redux.</div></details>
+  <details class="qa"><summary>Does <code class="inline">useCallback</code> improve performance by itself?</summary><div class="a">No — it only helps when the memoized function is passed to a child wrapped in <code class="inline">React.memo</code> (or used as a dependency elsewhere that needs referential stability, like a <code class="inline">useEffect</code> dependency). On its own it adds a small overhead and doesn't prevent the component's own re-render.</div></details>
+  <details class="qa"><summary>Why must hooks be called in the same order every render?</summary><div class="a">React doesn't use hook names — it tracks hooks per-component as an ordered list matched by call position. If a hook call is conditionally skipped, all subsequent hooks shift position and get matched to the wrong stored state, corrupting the component silently.</div></details>
+  <details class="qa"><summary>What's the danger of putting an object or array literal directly in a dependency array?</summary><div class="a">Object/array literals are a new reference on every render (<code class="inline">{} !== {}</code>), so an effect depending on one will re-run every render regardless of whether the actual values changed — often causing an infinite loop if the effect also sets state.</div></details>
+  <details class="qa"><summary>How do you prevent a stale closure bug in a <code class="inline">useEffect</code>?</summary><div class="a">Include every value the effect reads in the dependency array (as the exhaustive-deps ESLint rule enforces), or use the functional updater form of <code class="inline">setState</code> when you only need the latest state rather than reading it directly, so you don't need to list it as a dependency at all.</div></details>
+  <details class="qa"><summary>What is "lifting state up"?</summary><div class="a">Moving state from a child component to their closest common ancestor when two sibling components need to share and stay in sync with the same data — the ancestor then passes the state down as props and passes update functions down for the children to call.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Write a custom hook <code class="inline">useLocalStorage(key, initialValue)</code> that syncs state to <code class="inline">localStorage</code>.</li>
+      <li><span class="diff med">Medium</span> Build a shopping cart using <code class="inline">useReducer</code> (add, remove, update quantity, clear).</li>
+      <li><span class="diff med">Medium</span> Optimize a list of 1,000 rows so typing in an unrelated filter input doesn't re-render every row — use <code class="inline">memo</code> correctly.</li>
+      <li><span class="diff hard">Hard</span> Build a <code class="inline">useFetch(url)</code> custom hook with loading/error/data state that correctly cancels stale requests when <code class="inline">url</code> changes.</li>
+      <li><span class="diff hard">Hard</span> Implement an Error Boundary that logs the error to a mock analytics function and shows a retry button.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch07')">← Previous</button>
+    <button onclick="nextChapter('ch07')">Next: Next.js →</button>
+  </div>
+</section>
+<section class="chapter" id="ch08" data-title="Next.js">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 08 · next.js</div>
+    <h2>Next.js</h2>
+    <p class="desc">The production React framework — routing, rendering strategies, data fetching, and the App Router mental model.</p>
+  </div>
+
+  <h3>1. Why a framework on top of React</h3>
+  <p>React alone is just a rendering library — it doesn't decide routing, data fetching, bundling, or how/where code runs. Next.js adds file-based routing, multiple rendering strategies (server vs client), built-in optimization (images, fonts, scripts), and API routes — turning React into a full application platform.</p>
+
+  <h3>2. File-based routing (App Router)</h3>
+  <div class="example-box">
+    <pre><code>app/
+  layout.tsx        <span class="tok-com">// shared shell (nav, footer) wrapping every page below it</span>
+  page.tsx           <span class="tok-com">// route: "/"</span>
+  about/
+    page.tsx         <span class="tok-com">// route: "/about"</span>
+  blog/
+    [slug]/
+      page.tsx       <span class="tok-com">// route: "/blog/:slug" — dynamic segment</span>
+  dashboard/
+    loading.tsx      <span class="tok-com">// shown automatically while page.tsx's data loads</span>
+    error.tsx         <span class="tok-com">// shown if page.tsx throws</span></code></pre>
+  </div>
+
+  <h3>3. Server Components vs Client Components</h3>
+  <p>This is the single biggest mental shift from plain React. By default, every component in the App Router is a <strong>Server Component</strong> — it renders on the server, ships zero JS to the browser, and can directly access backend resources (databases, filesystem, secrets).</p>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// app/page.tsx — Server Component (default, no directive needed)</span>
+<span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">Page</span>() {
+  <span class="tok-kw">const</span> posts = <span class="tok-kw">await</span> db.posts.findMany(); <span class="tok-com">// direct DB access, runs on the server only</span>
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;PostList</span> posts={posts} <span class="tok-tag">/&gt;</span>;
+}</code></pre>
+  </div>
+  <div class="example-box">
+    <pre><code><span class="tok-str">'use client'</span>; <span class="tok-com">// opt IN to the browser — needed for interactivity</span>
+
+<span class="tok-kw">import</span> { useState } <span class="tok-kw">from</span> <span class="tok-str">'react'</span>;
+<span class="tok-kw">export</span> <span class="tok-kw">function</span> <span class="tok-fn">LikeButton</span>() {
+  <span class="tok-kw">const</span> [liked, setLiked] = useState(<span class="tok-kw">false</span>);
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;button</span> onClick={() =&gt; setLiked(!liked)}<span class="tok-tag">&gt;</span>{liked ? <span class="tok-str">'♥'</span> : <span class="tok-str">'♡'</span>}<span class="tok-tag">&lt;/button&gt;</span>;
+}</code></pre>
+  </div>
+  <p>Use <code class="inline">'use client'</code> only when you need hooks, browser APIs, event listeners, or state — push it as far down the tree ("leaf" components) as possible to keep most of the app on the fast, zero-JS server path.</p>
+
+  <h3>4. Rendering strategies</h3>
+  <table>
+    <tr><th>Strategy</th><th>When HTML is generated</th><th>Use for</th></tr>
+    <tr><td>SSR (Server-Side Rendering)</td><td>per request, on the server</td><td>personalized/frequently-changing pages</td></tr>
+    <tr><td>SSG (Static Site Generation)</td><td>at build time</td><td>marketing pages, blogs — content that rarely changes</td></tr>
+    <tr><td>ISR (Incremental Static Regen.)</td><td>at build, then re-generated in the background on a timer</td><td>product pages — mostly static but needs periodic freshness</td></tr>
+    <tr><td>CSR (Client-Side Rendering)</td><td>in the browser, after JS loads</td><td>highly interactive dashboards, authenticated app shells</td></tr>
+  </table>
+
+  <h3>5. Data fetching</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// fetch in a Server Component — cached by default, like getStaticProps used to be</span>
+<span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">Page</span>() {
+  <span class="tok-kw">const</span> res = <span class="tok-kw">await</span> fetch(<span class="tok-str">'https://api.example.com/posts'</span>, {
+    next: { revalidate: 60 } <span class="tok-com">// ISR: re-fetch in background at most every 60s</span>
+  });
+  <span class="tok-kw">const</span> posts = <span class="tok-kw">await</span> res.json();
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;PostList</span> posts={posts} <span class="tok-tag">/&gt;</span>;
+}</code></pre>
+  </div>
+
+  <h3>6. API routes / Route Handlers</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// app/api/users/route.ts</span>
+<span class="tok-kw">export</span> <span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">GET</span>() {
+  <span class="tok-kw">const</span> users = <span class="tok-kw">await</span> db.users.findMany();
+  <span class="tok-kw">return</span> Response.json(users);
+}
+<span class="tok-kw">export</span> <span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">POST</span>(request: Request) {
+  <span class="tok-kw">const</span> body = <span class="tok-kw">await</span> request.json();
+  <span class="tok-kw">const</span> newUser = <span class="tok-kw">await</span> db.users.create({ data: body });
+  <span class="tok-kw">return</span> Response.json(newUser, { status: 201 });
+}</code></pre>
+  </div>
+
+  <h3>7. Server Actions (mutations without a separate API layer)</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// app/actions.ts</span>
+<span class="tok-str">'use server'</span>;
+<span class="tok-kw">export</span> <span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">createPost</span>(formData: FormData) {
+  <span class="tok-kw">await</span> db.posts.create({ data: { title: formData.get(<span class="tok-str">'title'</span>) } });
+}
+
+<span class="tok-com">// in a component (can even be used directly in a &lt;form&gt; action)</span>
+<span class="tok-tag">&lt;form</span> action={createPost}<span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;input</span> name=<span class="tok-str">"title"</span> <span class="tok-tag">/&gt;</span>
+  <span class="tok-tag">&lt;button</span> type=<span class="tok-str">"submit"</span><span class="tok-tag">&gt;</span>Post<span class="tok-tag">&lt;/button&gt;</span>
+<span class="tok-tag">&lt;/form&gt;</span></code></pre>
+  </div>
+
+  <h3>8. Built-in optimizations</h3>
+  <ul>
+    <li><strong><code class="inline">next/image</code></strong> — automatic resizing, lazy loading, and modern formats (WebP/AVIF) to prevent layout shift.</li>
+    <li><strong><code class="inline">next/font</code></strong> — self-hosts Google Fonts and eliminates render-blocking font requests.</li>
+    <li><strong>Automatic code-splitting</strong> — each route only ships the JS it needs.</li>
+    <li><strong>Middleware</strong> — runs before a request completes (auth checks, redirects, A/B testing) at the edge.</li>
+  </ul>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What's the difference between SSR, SSG, and ISR?</summary><div class="a">SSG generates HTML once at build time (fastest, but stale until the next build). SSR generates HTML fresh on every request (always current, but slower and more server load). ISR is a hybrid — pages are statically generated but automatically regenerated in the background after a set interval, giving near-static speed with periodic freshness.</div></details>
+  <details class="qa"><summary>What is a Server Component, and why does it matter for performance?</summary><div class="a">A Server Component renders entirely on the server and sends only HTML (no component JS) to the browser, reducing bundle size and enabling direct backend access without an API round-trip. It matters because most real apps have a lot of non-interactive UI (layout, static content) that never needed to ship JavaScript in the first place.</div></details>
+  <details class="qa"><summary>When do you need <code class="inline">'use client'</code>?</summary><div class="a">Whenever a component needs interactivity or browser-only capabilities: hooks like <code class="inline">useState</code>/<code class="inline">useEffect</code>, event handlers, browser APIs (localStorage, window), or third-party libraries that assume a browser environment.</div></details>
+  <details class="qa"><summary>How does Next.js handle code-splitting?</summary><div class="a">Automatically, per route — each page's file-based route becomes its own JS bundle, so visiting <code class="inline">/dashboard</code> doesn't download the code for <code class="inline">/settings</code>. You can further split with <code class="inline">dynamic()</code> imports for heavy components used conditionally.</div></details>
+  <details class="qa"><summary>What problem do Server Actions solve?</summary><div class="a">They let you write a server-side mutation as a plain async function and call it directly from a component (even wire it straight to a form's <code class="inline">action</code>) without hand-building a separate REST/API route, reducing boilerplate for form submissions and data mutations.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Set up a Next.js app with 3 routes using the App Router, sharing a common layout with a nav bar.</li>
+      <li><span class="diff med">Medium</span> Build a blog: list page statically generated at build time, individual post pages using ISR with a 60s revalidate.</li>
+      <li><span class="diff med">Medium</span> Build an API route that returns paginated JSON data, and a Server Component page that fetches and renders it.</li>
+      <li><span class="diff hard">Hard</span> Build a comment form using a Server Action that revalidates the page's data after submission, with a pending/loading UI on the client.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch08')">← Previous</button>
+    <button onclick="nextChapter('ch08')">Next: Express.js &amp; Backend Basics →</button>
+  </div>
+</section>
+<section class="chapter" id="ch09" data-title="Express.js &amp; Backend Basics">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 09 · express.js</div>
+    <h2>Express.js &amp; Backend Basics</h2>
+    <p class="desc">Enough backend to be dangerous: building an API a frontend can talk to, middleware, REST conventions, and how the browser and server actually communicate.</p>
+  </div>
+
+  <h3>1. A minimal server</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> express = require(<span class="tok-str">'express'</span>);
+<span class="tok-kw">const</span> app = express();
+app.use(express.json()); <span class="tok-com">// parse JSON request bodies into req.body</span>
+
+app.get(<span class="tok-str">'/api/users'</span>, (req, res) =&gt; {
+  res.json([{ id: 1, name: <span class="tok-str">'Ana'</span> }]);
+});
+
+app.listen(3000, () =&gt; console.log(<span class="tok-str">'Server running on :3000'</span>));</code></pre>
+  </div>
+
+  <h3>2. REST conventions</h3>
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Meaning</th></tr>
+    <tr><td>GET</td><td>/api/users</td><td>list all users</td></tr>
+    <tr><td>GET</td><td>/api/users/:id</td><td>get one user</td></tr>
+    <tr><td>POST</td><td>/api/users</td><td>create a user</td></tr>
+    <tr><td>PUT / PATCH</td><td>/api/users/:id</td><td>replace / partially update a user</td></tr>
+    <tr><td>DELETE</td><td>/api/users/:id</td><td>delete a user</td></tr>
+  </table>
+  <div class="example-box">
+    <pre><code>app.get(<span class="tok-str">'/api/users/:id'</span>, (req, res) =&gt; {
+  <span class="tok-kw">const</span> user = users.find(u =&gt; u.id === Number(req.params.id));
+  <span class="tok-kw">if</span> (!user) <span class="tok-kw">return</span> res.status(404).json({ error: <span class="tok-str">'Not found'</span> });
+  res.json(user);
+});
+
+app.post(<span class="tok-str">'/api/users'</span>, (req, res) =&gt; {
+  <span class="tok-kw">const</span> { name } = req.body;
+  <span class="tok-kw">if</span> (!name) <span class="tok-kw">return</span> res.status(400).json({ error: <span class="tok-str">'name is required'</span> });
+  <span class="tok-kw">const</span> user = { id: Date.now(), name };
+  users.push(user);
+  res.status(201).json(user);
+});</code></pre>
+  </div>
+
+  <h3>3. Middleware — the core Express concept</h3>
+  <p>Middleware is a function <code class="inline">(req, res, next)</code> that runs on the way to (or from) your route handler — for logging, auth, parsing, error handling. Calling <code class="inline">next()</code> passes control along the chain; not calling it hangs the request.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">requireAuth</span>(req, res, next) {
+  <span class="tok-kw">const</span> token = req.headers.authorization;
+  <span class="tok-kw">if</span> (!token) <span class="tok-kw">return</span> res.status(401).json({ error: <span class="tok-str">'Unauthorized'</span> });
+  req.user = verifyToken(token); <span class="tok-com">// attach data for downstream handlers</span>
+  next();
+}
+app.get(<span class="tok-str">'/api/profile'</span>, requireAuth, (req, res) =&gt; res.json(req.user));
+
+<span class="tok-com">// centralized error handler — 4-arg signature is what makes Express treat it as one</span>
+app.use((err, req, res, next) =&gt; {
+  console.error(err);
+  res.status(500).json({ error: <span class="tok-str">'Something broke'</span> });
+});</code></pre>
+  </div>
+
+  <h3>4. CORS — why the frontend can't just call any API</h3>
+  <p>Browsers block cross-origin requests by default (the Same-Origin Policy). CORS is a set of response headers the <em>server</em> sends to explicitly allow a given frontend origin to read the response.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">const</span> cors = require(<span class="tok-str">'cors'</span>);
+app.use(cors({ origin: <span class="tok-str">'https://myapp.com'</span> }));</code></pre>
+  </div>
+
+  <h3>5. HTTP status codes worth memorizing</h3>
+  <table>
+    <tr><th>Code</th><th>Meaning</th></tr>
+    <tr><td>200</td><td>OK</td></tr>
+    <tr><td>201</td><td>Created</td></tr>
+    <tr><td>204</td><td>No Content (success, nothing to return)</td></tr>
+    <tr><td>400</td><td>Bad Request — client sent invalid data</td></tr>
+    <tr><td>401</td><td>Unauthorized — not authenticated</td></tr>
+    <tr><td>403</td><td>Forbidden — authenticated but not allowed</td></tr>
+    <tr><td>404</td><td>Not Found</td></tr>
+    <tr><td>422</td><td>Unprocessable Entity — validation failed</td></tr>
+    <tr><td>500</td><td>Internal Server Error</td></tr>
+  </table>
+
+  <h3>6. How the frontend actually talks to this</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">async</span> <span class="tok-kw">function</span> <span class="tok-fn">createUser</span>(name) {
+  <span class="tok-kw">const</span> res = <span class="tok-kw">await</span> fetch(<span class="tok-str">'/api/users'</span>, {
+    method: <span class="tok-str">'POST'</span>,
+    headers: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/json'</span> },
+    body: JSON.stringify({ name }),
+  });
+  <span class="tok-kw">if</span> (!res.ok) <span class="tok-kw">throw</span> <span class="tok-kw">new</span> Error(<span class="tok-kw">`Request failed: ${res.status}`</span>);
+  <span class="tok-kw">return</span> res.json();
+}</code></pre>
+  </div>
+  <div class="callout tip"><strong>Interview-relevant:</strong> <code class="inline">fetch</code> does NOT reject on HTTP error statuses (404, 500) — it only rejects on network failure. You must check <code class="inline">res.ok</code> yourself.</div>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What is middleware in Express, and what does calling (or not calling) <code class="inline">next()</code> do?</summary><div class="a">Middleware is a function that runs during the request/response cycle before the final route handler, used for cross-cutting concerns like logging, auth, or parsing. Calling <code class="inline">next()</code> passes control to the next middleware/handler in the chain; failing to call it (without sending a response) leaves the request hanging forever.</div></details>
+  <details class="qa"><summary>Explain CORS in your own words.</summary><div class="a">Browsers enforce the Same-Origin Policy, blocking JS from one origin (domain+port+protocol) from reading responses from a different origin unless the server explicitly opts in via <code class="inline">Access-Control-Allow-Origin</code> and related headers. It's a browser-side security restriction, not a network-level block — the request often still reaches the server, but the browser withholds the response from your JS.</div></details>
+  <details class="qa"><summary>PUT vs PATCH — what's the difference?</summary><div class="a">PUT is meant to replace the entire resource with the payload provided (idempotent, full replacement). PATCH applies a partial update, changing only the fields included in the request body.</div></details>
+  <details class="qa"><summary>What does "idempotent" mean, and which HTTP methods are idempotent?</summary><div class="a">An idempotent operation produces the same result no matter how many times it's repeated. GET, PUT, and DELETE are idempotent (calling DELETE on an already-deleted resource still ends in "resource gone"). POST is not — submitting the same POST twice typically creates two resources.</div></details>
+  <details class="qa"><summary>Why does <code class="inline">fetch()</code> not throw on a 404 or 500 response?</summary><div class="a"><code class="inline">fetch</code> only rejects its promise for network-level failures (DNS failure, no connection). Any response that actually reaches the browser — even a 500 — resolves successfully; you must inspect <code class="inline">response.ok</code> or <code class="inline">response.status</code> yourself to detect an application-level error.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Build a full CRUD Express API for a "todos" resource, backed by an in-memory array.</li>
+      <li><span class="diff med">Medium</span> Add a logging middleware that prints method, path, and response time for every request.</li>
+      <li><span class="diff med">Medium</span> Add a simple auth middleware requiring a header token, protecting only the write routes (POST/PUT/DELETE).</li>
+      <li><span class="diff hard">Hard</span> Build a small React app that consumes this API — list, create, delete todos — with proper loading/error UI for each request.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch09')">← Previous</button>
+    <button onclick="nextChapter('ch09')">Next: Tailwind CSS →</button>
+  </div>
+</section>
+<section class="chapter" id="ch10" data-title="Tailwind CSS">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 10 · tailwind</div>
+    <h2>Tailwind CSS</h2>
+    <p class="desc">Utility-first styling — build custom designs directly in markup without writing separate CSS files, using a constrained design-system scale.</p>
+  </div>
+
+  <h3>1. The utility-first idea</h3>
+  <p>Instead of writing a custom <code class="inline">.card { padding: 24px; }</code> class, you compose small, single-purpose utility classes directly in the HTML/JSX. This removes the "naming things is hard" problem and keeps styles co-located with markup.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-tag">&lt;div</span> class=<span class="tok-str">"rounded-lg bg-white p-6 shadow-md flex items-center gap-4"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;img</span> class=<span class="tok-str">"h-12 w-12 rounded-full"</span> src=<span class="tok-str">"avatar.jpg"</span> <span class="tok-tag">/&gt;</span>
+  <span class="tok-tag">&lt;div&gt;</span>
+    <span class="tok-tag">&lt;p</span> class=<span class="tok-str">"font-semibold text-gray-900"</span><span class="tok-tag">&gt;</span>Ana Silva<span class="tok-tag">&lt;/p&gt;</span>
+    <span class="tok-tag">&lt;p</span> class=<span class="tok-str">"text-sm text-gray-500"</span><span class="tok-tag">&gt;</span>Product Designer<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+  </div>
+
+  <h3>2. The scale, not arbitrary numbers</h3>
+  <p>Every Tailwind utility maps to a design-token scale, so <code class="inline">p-4</code> is always exactly 16px (<code class="inline">4 × 4px</code>) everywhere in the app — this is what enforces the spacing consistency discussed in Chapter 1, automatically.</p>
+  <table>
+    <tr><th>Class</th><th>Value</th></tr>
+    <tr><td><code class="inline">p-1</code></td><td>4px</td></tr>
+    <tr><td><code class="inline">p-2</code></td><td>8px</td></tr>
+    <tr><td><code class="inline">p-4</code></td><td>16px</td></tr>
+    <tr><td><code class="inline">p-6</code></td><td>24px</td></tr>
+    <tr><td><code class="inline">p-8</code></td><td>32px</td></tr>
+    <tr><td><code class="inline">p-12</code></td><td>48px</td></tr>
+  </table>
+
+  <h3>3. Responsive design in Tailwind</h3>
+  <p>Prefixes are mobile-first — an unprefixed class applies to all sizes; a prefixed one applies at that breakpoint <em>and up</em>.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-tag">&lt;div</span> class=<span class="tok-str">"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-com">&lt;!-- 1 column on mobile, 2 on tablet (≥768px), 3 on desktop (≥1024px) --&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+  </div>
+
+  <h3>4. States: hover, focus, dark mode</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-tag">&lt;button</span> class=<span class="tok-str">"bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-300
+  active:bg-blue-800 disabled:opacity-50 dark:bg-blue-500
+  text-white px-4 py-2 rounded-md transition-colors"</span><span class="tok-tag">&gt;</span>
+  Save changes
+<span class="tok-tag">&lt;/button&gt;</span></code></pre>
+  </div>
+
+  <h3>5. Component extraction — avoiding class soup</h3>
+  <p>When a utility combination repeats across the app, extract it into a real component (React) rather than a Tailwind <code class="inline">@apply</code> class — this keeps a single source of truth and stays idiomatic in component-based frameworks.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">Button</span>({ children, variant = <span class="tok-str">'primary'</span>, ...props }) {
+  <span class="tok-kw">const</span> base = <span class="tok-str">"px-4 py-2 rounded-md font-medium transition-colors"</span>;
+  <span class="tok-kw">const</span> variants = {
+    primary: <span class="tok-str">"bg-blue-600 text-white hover:bg-blue-700"</span>,
+    secondary: <span class="tok-str">"bg-gray-100 text-gray-900 hover:bg-gray-200"</span>,
+  };
+  <span class="tok-kw">return</span> <span class="tok-tag">&lt;button</span> className={<span class="tok-kw">`${base} ${variants[variant]}`</span>} {...props}<span class="tok-tag">&gt;</span>{children}<span class="tok-tag">&lt;/button&gt;</span>;
+}</code></pre>
+  </div>
+
+  <h3>6. Customizing the design system</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// tailwind.config.js</span>
+module.exports = {
+  theme: {
+    extend: {
+      colors: { brand: { 500: <span class="tok-str">'#5eb1ff'</span>, 600: <span class="tok-str">'#3d94e6'</span> } },
+      fontFamily: { sans: [<span class="tok-str">'Inter'</span>, <span class="tok-str">'sans-serif'</span>] },
+      spacing: { <span class="tok-str">'18'</span>: <span class="tok-str">'4.5rem'</span> },
+    },
+  },
+};</code></pre>
+  </div>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What's the main criticism of Tailwind, and how do you address it?</summary><div class="a">Long class strings can feel unreadable ("class soup") and mix concerns in markup. The mitigation is component extraction — instead of repeating utilities everywhere, wrap the pattern in a real reusable component (React/Vue) once, and reference that component elsewhere, which is exactly what you'd do with any repeated JSX/CSS anyway.</div></details>
+  <details class="qa"><summary>How does Tailwind keep the shipped CSS small despite thousands of possible utility classes?</summary><div class="a">Tailwind scans your source files at build time and only generates CSS for the classes it actually finds used ("JIT"/content-scanning) — unused utilities never make it into the final bundle, so the output CSS is proportional to what you use, not the full possible utility set.</div></details>
+  <details class="qa"><summary>Why is Tailwind's spacing/sizing scale considered good practice even outside Tailwind?</summary><div class="a">It forces every measurement onto a constrained, consistent scale (multiples of 4px) instead of arbitrary one-off values, which is exactly the spacing-system discipline professional design systems use — Tailwind just enforces it at the tooling level.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Build a responsive navbar with Tailwind: logo left, links right, collapsing to a mobile menu below <code class="inline">md</code>.</li>
+      <li><span class="diff med">Medium</span> Build a pricing page with 3 cards, one visually highlighted as "Recommended," fully responsive.</li>
+      <li><span class="diff med">Medium</span> Extract a reusable <code class="inline">&lt;Badge&gt;</code> component with variant props (success/warning/error) using Tailwind color utilities.</li>
+      <li><span class="diff hard">Hard</span> Implement dark mode toggling (class strategy) across an entire small app, including form inputs and buttons.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch10')">← Previous</button>
+    <button onclick="nextChapter('ch10')">Next: UI/UX Principles →</button>
+  </div>
+</section>
+<section class="chapter" id="ch11" data-title="UI/UX Principles for Developers">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 11 · design sense</div>
+    <h2>UI/UX Principles for Developers</h2>
+    <p class="desc">The visual judgment that turns "technically correct" code into a UI that looks and feels professionally designed — how to translate a Figma file into pixel-accurate, consistent code.</p>
+  </div>
+
+  <h3>1. Layout — hierarchy and grouping</h3>
+  <ul>
+    <li><strong>Proximity</strong> — related items should be close together, unrelated items should have visible separation. If a label and its input have the same gap as two unrelated fields, the eye can't tell they're a group.</li>
+    <li><strong>Alignment</strong> — every element should align to something (a grid column, another element's edge). Unaligned elements are the #1 subconscious signal of an "unpolished" UI.</li>
+    <li><strong>Visual hierarchy</strong> — size, weight, color, and position tell the eye what to look at first. A page should have exactly one primary action that's visually dominant.</li>
+    <li><strong>The 8pt grid</strong> — as in Chapter 1, base every layout dimension on multiples of a base unit (4 or 8px) so spacing always "lines up" between components.</li>
+  </ul>
+
+  <h3>2. Spacing — the detail that separates junior from senior work</h3>
+  <div class="callout tip"><strong>The single highest-leverage skill:</strong> whitespace is not empty space to fill — it's what creates grouping and breathing room. When a design "feels cramped," the fix is almost always more spacing between unrelated groups, not smaller content.</div>
+  <p>Practical spacing checklist when implementing a design:</p>
+  <ul>
+    <li>Vertical rhythm: consistent spacing between stacked elements (e.g. always 24px between form fields, 48px between page sections).</li>
+    <li>Padding should increase, not decrease, at larger breakpoints — mobile is cramped by necessity; desktop has room.</li>
+    <li>Nested spacing should be smaller than outer spacing (padding inside a card &lt; gap between cards).</li>
+  </ul>
+
+  <h3>3. Typography as a system, not per-element choices</h3>
+  <div class="example-box">
+    <div class="lbl">Example — a type scale used consistently</div>
+    <pre><code>--text-xs: 12px;   /* captions, timestamps */
+--text-sm: 14px;   /* secondary text, labels */
+--text-base: 16px; /* body copy */
+--text-lg: 18px;   /* lead paragraphs */
+--text-xl: 24px;   /* h3 */
+--text-2xl: 32px;  /* h2 */
+--text-3xl: 48px;  /* h1 / hero */</code></pre>
+  </div>
+  <p>Never eyeball a font-size. If a design calls for "slightly bigger," round to the nearest scale step — this is what "systemized" means, and it's what makes a UI feel coherent across 50 screens instead of hand-crafted per page.</p>
+
+  <h3>4. Consistency — the trait that most separates good UIs from bad ones</h3>
+  <ul>
+    <li><strong>Component reuse</strong> — the same button should look and behave identically everywhere it appears. If "Save" is blue and filled on one screen and outlined on another, that's a bug, not a style choice.</li>
+    <li><strong>Naming consistency</strong> — the same action should always be labeled the same word (don't call it "Delete" here and "Remove" there).</li>
+    <li><strong>Interaction consistency</strong> — if clicking a card opens a detail view in one place, it should everywhere; don't make some cards clickable and visually identical cards not.</li>
+    <li><strong>A design system / token file</strong> is how teams enforce this at scale — colors, spacing, radii, shadows, and type all reference one source of truth instead of being redefined per component.</li>
+  </ul>
+
+  <h3>5. Translating a design file (Figma) into pixel-accurate code</h3>
+  <ol>
+    <li><strong>Inspect, don't guess.</strong> Use Figma's "Inspect" panel to get exact spacing, font sizes, colors (hex/rgba), and border-radius — never eyeball values from the screenshot.</li>
+    <li><strong>Extract tokens first.</strong> Before writing a single component, pull out the color palette, type scale, and spacing scale used across the whole file — most designs reuse a small set of values even if that's not obvious at a glance.</li>
+    <li><strong>Match structure, not just appearance.</strong> If the design shows a card with icon + title + description, structure your markup that way (semantically), then style — don't build one giant absolutely-positioned div that happens to look right at one screen size.</li>
+    <li><strong>Verify at multiple states</strong> the static design doesn't show: empty state, loading state, error state, long text overflow, hover/focus. A real interview task often specifically checks whether you thought about these.</li>
+    <li><strong>Compare side-by-side.</strong> Overlay your build against the design (or flip between browser tabs) at the same zoom level and check alignment, spacing, and type size pixel-by-pixel.</li>
+  </ol>
+
+  <h3>6. Color &amp; contrast</h3>
+  <ul>
+    <li>Body text needs a contrast ratio of at least 4.5:1 against its background (WCAG AA) — large text (18px+/bold) needs at least 3:1.</li>
+    <li>Never convey information (errors, required fields) through color alone — pair it with an icon or text for colorblind users.</li>
+    <li>Build a limited palette: 1 primary, 1–2 accent, a gray scale (5–7 steps), and semantic colors (success/warning/error/info). Resist adding a new color per feature.</li>
+  </ul>
+
+  <h3>7. Accessibility as part of "pixel-accurate"</h3>
+  <ul>
+    <li>Every interactive element needs a visible focus state — don't remove <code class="inline">outline</code> without replacing it.</li>
+    <li>Touch/click targets should be at least 44×44px, even if the visual icon is smaller (pad the hit area).</li>
+    <li>Use real semantic elements (<code class="inline">&lt;button&gt;</code>, not a styled <code class="inline">&lt;div onClick&gt;</code>) so keyboard and screen-reader users get built-in behavior for free.</li>
+  </ul>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>How do you approach turning a Figma design into a component?</summary><div class="a">Inspect exact values rather than eyeballing (spacing, colors, type), identify which values map to existing design tokens vs. new ones, structure the markup semantically to match the content hierarchy (not just visual position), build states the static file doesn't show (empty/loading/error/hover), and verify side-by-side at the actual target viewport widths.</div></details>
+  <details class="qa"><summary>What makes a UI feel "consistent" technically?</summary><div class="a">A shared, limited set of design tokens (color, spacing, type, radius, shadow) referenced everywhere instead of one-off values, componentized UI elements reused rather than rebuilt per screen, and consistent naming/behavior for the same actions across the whole app.</div></details>
+  <details class="qa"><summary>What's the difference between UI and UX?</summary><div class="a">UI (User Interface) is the visual and interactive surface — layout, color, typography, components. UX (User Experience) is the broader outcome — whether the product is usable, efficient, and satisfying to accomplish a goal with, including flows, information architecture, and error recovery, independent of visual styling.</div></details>
+  <details class="qa"><summary>How would you ensure your implementation is accessible, not just visually correct?</summary><div class="a">Use semantic HTML elements instead of generic divs with click handlers, ensure sufficient color contrast, preserve visible focus indicators, make sure all functionality is reachable by keyboard alone, add proper labels/alt text, and test touch target sizes on mobile.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Take any UI screenshot and identify its spacing scale, type scale, and color palette by eye — write them down as tokens.</li>
+      <li><span class="diff med">Medium</span> Rebuild a real product's login screen (e.g. from memory) pixel-accurately, including focus states and an error state for wrong credentials.</li>
+      <li><span class="diff med">Medium</span> Take a component you built earlier in this guide and run it through a color-contrast checker; fix any failing text/background pairs.</li>
+      <li><span class="diff hard">Hard</span> Build a small design-token file (CSS variables) and refactor 3 previously-built components to use it instead of hardcoded values.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch11')">← Previous</button>
+    <button onclick="nextChapter('ch11')">Next: Debugging Frontend Issues →</button>
+  </div>
+</section>
+<section class="chapter" id="ch12" data-title="Debugging Frontend Issues">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 12 · debugging</div>
+    <h2>Debugging Frontend Issues</h2>
+    <p class="desc">A systematic process for finding bugs — plus the specific DevTools workflows for CSS layout, JS logic, and network issues.</p>
+  </div>
+
+  <h3>1. A repeatable debugging process</h3>
+  <ol>
+    <li><strong>Reproduce reliably.</strong> Find the exact steps that trigger the bug every time — an intermittent bug you can't reproduce can't be fixed with confidence.</li>
+    <li><strong>Isolate.</strong> Remove variables until you find the minimal case that still fails (comment out code, test in an empty component, bisect).</li>
+    <li><strong>Form a hypothesis.</strong> Based on the symptom, guess the likely cause before changing code — undirected trial-and-error wastes time.</li>
+    <li><strong>Verify with evidence</strong> (a log, a breakpoint, a network tab) rather than assuming the fix worked.</li>
+    <li><strong>Fix the root cause</strong>, not just the symptom — and add a test or comment explaining why, so it doesn't regress.</li>
+  </ol>
+
+  <h3>2. Console methods beyond <code class="inline">console.log</code></h3>
+  <div class="example-box">
+    <pre><code>console.table(users);          <span class="tok-com">// renders an array of objects as a readable table</span>
+console.group(<span class="tok-str">'Fetch user'</span>);
+console.log(<span class="tok-str">'starting...'</span>);
+console.groupEnd();
+console.trace();               <span class="tok-com">// prints the current call stack</span>
+console.assert(count &gt; 0, <span class="tok-str">'count should be positive'</span>); <span class="tok-com">// logs only if condition is false</span>
+console.time(<span class="tok-str">'sort'</span>); sortItems(); console.timeEnd(<span class="tok-str">'sort'</span>); <span class="tok-com">// measure duration</span></code></pre>
+  </div>
+
+  <h3>3. Debugging JS logic with breakpoints (not just console.log)</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-kw">function</span> <span class="tok-fn">calculateTotal</span>(items) {
+  debugger; <span class="tok-com">// pauses execution here when devtools is open — inspect variables live</span>
+  <span class="tok-kw">return</span> items.reduce((sum, i) =&gt; sum + i.price, 0);
+}</code></pre>
+  </div>
+  <p>Breakpoints let you inspect the exact call stack and variable values at the moment of failure — far more reliable than sprinkling <code class="inline">console.log</code> and re-running. Conditional breakpoints (right-click a line number in DevTools) let you pause only on the Nth iteration or a specific condition.</p>
+
+  <h3>4. Debugging CSS layout issues</h3>
+  <ul>
+    <li><strong>The Elements panel's "Computed" tab</strong> shows the final resolved value of any property after the cascade — use it to find which rule actually won.</li>
+    <li><strong>Toggle <code class="inline">outline: 1px solid red</code> on <code class="inline">*</code></strong> temporarily to visualize every box's boundaries when a layout looks broken.</li>
+    <li><strong>The Layout panel</strong> in Chrome DevTools visually overlays Flexbox/Grid lines and gaps directly on the page.</li>
+    <li><strong>Common cause checklist for "why isn't this centering/aligning":</strong> is the parent actually a flex/grid container? Is there a default margin/padding from the browser's user-agent stylesheet? Is a fixed height clipping content? Is <code class="inline">box-sizing</code> set consistently?</li>
+  </ul>
+
+  <h3>5. Debugging with the Network tab</h3>
+  <ul>
+    <li>Check the actual response status and body — a 200 with an error message in the body (a common backend mistake) looks fine at a glance but isn't.</li>
+    <li>Check request headers/payload to confirm the frontend is sending what you think it's sending (auth token present? correct Content-Type?).</li>
+    <li>Use the "waterfall" view to spot slow or blocking requests, or requests firing more often than expected (a classic sign of a missing <code class="inline">useEffect</code> dependency array or a re-render loop).</li>
+  </ul>
+
+  <h3>6. React-specific debugging</h3>
+  <ul>
+    <li><strong>React DevTools</strong> — inspect the component tree, current props/state, and use the "highlight updates" setting to visually see which components re-render and how often.</li>
+    <li>An infinite re-render loop is almost always: setting state directly in the render body (not in an effect/handler), or a <code class="inline">useEffect</code> with a dependency that's a new object/array/function reference every render.</li>
+    <li><strong>"Why did this re-render?"</strong> — check: did props change (by reference)? Did state change? Did the parent re-render (and this child isn't memoized)? Did context change?</li>
+  </ul>
+  <div class="example-box">
+    <div class="lbl">Example — a real infinite-loop bug and the fix</div>
+    <pre><code><span class="tok-com">// ❌ bug: new object literal every render → effect re-runs forever</span>
+<span class="tok-kw">const</span> options = { limit: 10 };
+useEffect(() =&gt; { fetchData(options).then(setData); }, [options]);
+
+<span class="tok-com">// ✅ fix: move the stable value outside the component, or memoize it</span>
+<span class="tok-kw">const</span> options = useMemo(() =&gt; ({ limit: 10 }), []);
+useEffect(() =&gt; { fetchData(options).then(setData); }, [options]);</code></pre>
+  </div>
+
+  <h3>7. Reading a stack trace</h3>
+  <p>Read from the top: the first line is the error and where it was thrown; each subsequent line is a calling frame, in order, down to where execution originally started. Look for the first frame that's <em>your</em> code (not a library) — that's usually where the real bug lives, even if the crash surfaced deeper inside a dependency.</p>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>Walk me through how you'd debug a page that's blank with no visible errors.</summary><div class="a">Check the console for silent errors first (sometimes filtered by log level). Check the Network tab for a failed critical request (JS bundle 404, API call failing and blocking render). Check React DevTools to see if the component tree even mounted. Check for a thrown error being swallowed by a missing error boundary. Bisect by commenting out recently changed code.</div></details>
+  <details class="qa"><summary>A component re-renders way more than expected. How do you find out why?</summary><div class="a">Use React DevTools' Profiler/"highlight updates" to see which components re-render and how often. Check whether a parent re-renders and this child isn't memoized, whether a Context value is a new object each render, or whether a <code class="inline">useEffect</code> dependency is a non-stable reference (object/array/function) causing an update-triggering loop.</div></details>
+  <details class="qa"><summary>How do you debug a CSS layout that "looks broken" with no console errors (since CSS doesn't throw)?</summary><div class="a">Inspect the element's Computed styles to see what actually won the cascade, temporarily outline all elements to visualize box boundaries, check for default browser margins/padding, and use the Layout panel to visualize flex/grid lines directly on the page.</div></details>
+  <details class="qa"><summary>What's the value of a conditional breakpoint over a console.log inside a loop?</summary><div class="a">A console.log inside a loop that runs 1000 times floods the console and you have to scroll to find the relevant iteration. A conditional breakpoint pauses execution only when your condition is true, letting you inspect the exact state at the moment that matters without noise.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Take a component with a deliberately introduced bug (off-by-one in a loop) and find it using only breakpoints, not console.log.</li>
+      <li><span class="diff med">Medium</span> Given a React component stuck in an infinite render loop, identify and fix the unstable dependency causing it.</li>
+      <li><span class="diff med">Medium</span> Debug a CSS layout where a flex child won't shrink below its content size — identify and apply the fix (<code class="inline">min-width: 0</code>).</li>
+      <li><span class="diff hard">Hard</span> Given a network waterfall showing the same GET request firing 6 times per second, diagnose and fix the root cause in the component code.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch12')">← Previous</button>
+    <button onclick="nextChapter('ch12')">Next: Performance Optimization →</button>
+  </div>
+</section>
+<section class="chapter" id="ch13" data-title="Performance Optimization">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 13 · performance</div>
+    <h2>Performance Optimization</h2>
+    <p class="desc">How browsers render, what actually makes a page feel slow, and the concrete techniques to fix it — for both load time and runtime interactivity.</p>
+  </div>
+
+  <h3>1. The critical rendering path</h3>
+  <p>Browser flow: <strong>parse HTML → build DOM → fetch/parse CSS → build CSSOM → combine into a Render Tree → Layout (compute geometry) → Paint (fill pixels) → Composite (layer onto the screen)</strong>. Anything that forces this to repeat — resizing an element in a loop, reading layout properties right after writing them — is expensive.</p>
+
+  <h3>2. Core Web Vitals — the metrics that actually get measured</h3>
+  <table>
+    <tr><th>Metric</th><th>Measures</th><th>Good threshold</th></tr>
+    <tr><td>LCP (Largest Contentful Paint)</td><td>time until the biggest visible element renders</td><td>&lt; 2.5s</td></tr>
+    <tr><td>INP (Interaction to Next Paint)</td><td>responsiveness of the page to user input</td><td>&lt; 200ms</td></tr>
+    <tr><td>CLS (Cumulative Layout Shift)</td><td>visual stability — how much content jumps around while loading</td><td>&lt; 0.1</td></tr>
+  </table>
+
+  <h3>3. Reducing bundle size &amp; load time</h3>
+  <div class="example-box">
+    <pre><code><span class="tok-com">// code-splitting: load a heavy component only when needed</span>
+<span class="tok-kw">const</span> Chart = React.lazy(() =&gt; import(<span class="tok-str">'./Chart'</span>));
+
+<span class="tok-tag">&lt;Suspense</span> fallback={<span class="tok-tag">&lt;Spinner /&gt;</span>}<span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;Chart /&gt;</span>
+<span class="tok-tag">&lt;/Suspense&gt;</span></code></pre>
+  </div>
+  <ul>
+    <li><strong>Code-split by route</strong> — don't ship the admin dashboard's JS to a visitor on the landing page.</li>
+    <li><strong>Tree-shake</strong> — import only what you use (<code class="inline">import { debounce } from 'lodash-es'</code>, not the whole library).</li>
+    <li><strong>Lazy-load below-the-fold images</strong> with <code class="inline">loading="lazy"</code>.</li>
+    <li><strong>Compress &amp; serve modern image formats</strong> (WebP/AVIF) and correctly sized <code class="inline">srcset</code>s (see Chapter 2).</li>
+  </ul>
+
+  <h3>4. Avoiding layout thrashing</h3>
+  <div class="example-box">
+    <div class="lbl">Example — forced synchronous layout (bad) vs batched (good)</div>
+    <pre><code><span class="tok-com">// ❌ reading then writing layout in a loop forces a re-layout every iteration</span>
+boxes.forEach(box =&gt; {
+  <span class="tok-kw">const</span> h = box.offsetHeight; <span class="tok-com">// READ — triggers layout</span>
+  box.style.height = h + 10 + <span class="tok-str">'px'</span>; <span class="tok-com">// WRITE — invalidates layout</span>
+});
+
+<span class="tok-com">// ✅ batch all reads first, then all writes</span>
+<span class="tok-kw">const</span> heights = boxes.map(box =&gt; box.offsetHeight); <span class="tok-com">// all reads</span>
+boxes.forEach((box, i) =&gt; box.style.height = heights[i] + 10 + <span class="tok-str">'px'</span>); <span class="tok-com">// all writes</span></code></pre>
+  </div>
+
+  <h3>5. Animating cheaply</h3>
+  <p>Only <code class="inline">transform</code> and <code class="inline">opacity</code> can be animated on the compositor thread, skipping layout and paint entirely — everything else (animating <code class="inline">width</code>, <code class="inline">top</code>, <code class="inline">margin</code>) forces layout recalculation on every frame.</p>
+  <div class="example-box">
+    <pre><code><span class="tok-com">/* ❌ expensive — triggers layout every frame */</span>
+.box { transition: left 0.3s; }
+.box.open { left: 300px; }
+
+<span class="tok-com">/* ✅ cheap — GPU-composited, no layout recalculation */</span>
+.box { transition: transform 0.3s; }
+.box.open { transform: translateX(300px); }</code></pre>
+  </div>
+
+  <h3>6. React-specific performance</h3>
+  <ul>
+    <li>Virtualize long lists (render only visible rows) with a library like <code class="inline">react-window</code> when rendering hundreds/thousands of items.</li>
+    <li>Memoize expensive derived calculations (<code class="inline">useMemo</code>) and avoid unnecessary re-renders of large subtrees (<code class="inline">React.memo</code>), but only after profiling shows it's needed — premature memoization adds complexity for no measured benefit.</li>
+    <li>Avoid creating new functions/objects as props to memoized children on every render (breaks the memoization).</li>
+    <li>Debounce expensive operations triggered by fast-firing events (typing, scrolling, resizing).</li>
+  </ul>
+
+  <h3>7. Measuring, not guessing</h3>
+  <ul>
+    <li><strong>Lighthouse</strong> (Chrome DevTools) — automated audit of performance, accessibility, and best practices with a numeric score and specific fixes.</li>
+    <li><strong>Performance panel</strong> — records a timeline of scripting, rendering, and painting to find exactly which function is slow.</li>
+    <li><strong>React Profiler</strong> — measures render duration per component per commit.</li>
+  </ul>
+  <div class="callout warn"><strong>Golden rule:</strong> never optimize based on a hunch. Profile first, find the actual bottleneck, fix that specific thing, then measure again to confirm it helped.</div>
+
+  <h3>Interview Q&amp;A</h3>
+  <details class="qa"><summary>What are the Core Web Vitals and why do they matter?</summary><div class="a">LCP (loading speed of the main content), INP (input responsiveness), and CLS (visual stability) are Google's standardized UX metrics — they matter both for real user experience and because they factor into search ranking, giving teams concrete, measurable performance targets instead of vague "feels slow" complaints.</div></details>
+  <details class="qa"><summary>Why is animating <code class="inline">transform</code> cheaper than animating <code class="inline">width</code> or <code class="inline">top</code>?</summary><div class="a"><code class="inline">transform</code> and <code class="inline">opacity</code> can be handled entirely by the compositor/GPU without recalculating layout or repainting the rest of the page. Properties like <code class="inline">width</code>, <code class="inline">top</code>, or <code class="inline">margin</code> change an element's geometry, forcing the browser to redo layout and paint on every animation frame — much more expensive.</div></details>
+  <details class="qa"><summary>What is layout thrashing and how do you avoid it?</summary><div class="a">It happens when you interleave DOM reads (like <code class="inline">offsetHeight</code>) and writes (like <code class="inline">style.height =</code>) in a loop — each read forces the browser to flush pending layout changes synchronously, so alternating read/write causes layout to run repeatedly instead of once. The fix is batching: do all reads first, store the values, then do all writes.</div></details>
+  <details class="qa"><summary>How would you optimize a list rendering 10,000 items?</summary><div class="a">Virtualize it — only render the rows currently visible in the viewport (plus a small buffer), recycling DOM nodes as the user scrolls, using a library like react-window or TanStack Virtual, rather than mounting 10,000 real DOM nodes at once.</div></details>
+  <details class="qa"><summary>What's the danger of over-using <code class="inline">useMemo</code>/<code class="inline">React.memo</code> everywhere?</summary><div class="a">Memoization itself has a cost (storing and comparing previous values/props) and adds code complexity. Applied indiscriminately without profiling, it can add overhead without meaningfully reducing re-renders, and it obscures simpler code for a "just in case" optimization that was never actually the bottleneck.</div></details>
+
+  <div class="task-list">
+    <div class="lbl">Practice Tasks</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Run Lighthouse on a page you've built in this guide and fix its top 2 flagged issues.</li>
+      <li><span class="diff med">Medium</span> Convert a width/left-based slide-in menu animation to use <code class="inline">transform</code> instead, and verify it's smoother in the Performance panel.</li>
+      <li><span class="diff med">Medium</span> Add route-based code-splitting to a small multi-page React app using <code class="inline">React.lazy</code> and <code class="inline">Suspense</code>.</li>
+      <li><span class="diff hard">Hard</span> Implement basic list virtualization from scratch (render only rows in view + a buffer, based on scroll position) without a library.</li>
+    </ul>
+  </div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch13')">← Previous</button>
+    <button onclick="nextChapter('ch13')">Next: Interview Question Bank →</button>
+  </div>
+</section>
+<section class="chapter" id="ch14" data-title="Interview Question Bank">
+  <div class="chapter-head">
+    <div class="chapter-tag">// 14 · interview prep</div>
+    <h2>Interview Question Bank &amp; Mock Problems</h2>
+    <p class="desc">Cumulative practice — rapid-fire conceptual questions, live-coding style problems, and a frontend "system design" style question, mixing every topic in this guide.</p>
+  </div>
+
+  <h3>1. Rapid-fire round (aim to answer each in under 60 seconds)</h3>
+  <details class="qa"><summary>What happens when you type a URL into the browser and press Enter?</summary><div class="a">DNS lookup resolves the domain to an IP → browser opens a TCP connection (TLS handshake if HTTPS) → sends an HTTP request → server responds with HTML → browser parses HTML into the DOM while fetching CSS/JS → CSSOM built → DOM+CSSOM combine into the render tree → layout → paint → composite → page becomes interactive as JS finishes executing.</div></details>
+  <details class="qa"><summary>What's the difference between a library and a framework?</summary><div class="a">A library (like React for rendering) is something <em>you</em> call into on your own terms and control flow. A framework (like Next.js or Angular) dictates the overall structure and calls <em>your</em> code — "inversion of control." React itself is technically a library; the ecosystem around it (Next.js) becomes a framework.</div></details>
+  <details class="qa"><summary>Explain the difference between authentication and authorization.</summary><div class="a">Authentication verifies who you are (login, password, tokens). Authorization determines what you're allowed to do once identified (permissions, roles). A logged-in user is authenticated; whether they can delete another user's post is an authorization decision.</div></details>
+  <details class="qa"><summary>What is a memory leak in a frontend context, and give a common React cause.</summary><div class="a">Memory that's no longer needed but isn't released because something still references it. Common React cause: an async operation (timer, subscription, fetch) that sets state after the component has unmounted, or an event listener added in <code class="inline">useEffect</code> without a cleanup function removing it.</div></details>
+  <details class="qa"><summary>What is a Progressive Web App (PWA)?</summary><div class="a">A web app enhanced with capabilities traditionally reserved for native apps — offline support via a Service Worker, install-to-homescreen via a manifest file, and push notifications — while still being a normal website under the hood.</div></details>
+  <details class="qa"><summary>What's the difference between <code class="inline">localStorage</code>, <code class="inline">sessionStorage</code>, and cookies?</summary><div class="a"><code class="inline">localStorage</code> persists indefinitely with no expiry, scoped per-origin, ~5-10MB, not sent to the server automatically. <code class="inline">sessionStorage</code> is the same API but cleared when the tab closes. Cookies are small (~4KB), can have an expiry, and are automatically sent with every matching HTTP request — which is why they're used for session/auth tokens but need care around size and security (HttpOnly, Secure, SameSite flags).</div></details>
+  <details class="qa"><summary>What is XSS, and how does React help prevent it by default?</summary><div class="a">Cross-Site Scripting — an attacker injects malicious script that executes in another user's browser, often via unescaped user input rendered as HTML. React escapes all values rendered via JSX <code class="inline">{}</code> by default, converting them to text rather than executing them as markup — the risk reappears specifically when using <code class="inline">dangerouslySetInnerHTML</code>, which should only ever receive sanitized content.</div></details>
+  <details class="qa"><summary>What is a race condition in a frontend app? Give an example.</summary><div class="a">A bug caused by the order of async operations completing unpredictably. Example: a user types "a" then quickly "ab" in a search box, firing two API requests; if the "a" request happens to resolve after the "ab" request, the UI ends up showing stale results for "a" even though "ab" is the latest input. Fixed by tracking request order/cancellation (see Chapter 7).</div></details>
+
+  <h3>2. Live-coding style problems</h3>
+  <div class="task-list">
+    <div class="lbl">Coding Problems</div>
+    <ul>
+      <li><span class="diff easy">Easy</span> Write a function <code class="inline">flattenObject(obj)</code> that turns <code class="inline">{a: {b: 1, c: {d: 2}}}</code> into <code class="inline">{'a.b': 1, 'a.c.d': 2}</code>.</li>
+      <li><span class="diff easy">Easy</span> Build a controlled <code class="inline">&lt;Accordion&gt;</code> React component where only one panel can be open at a time.</li>
+      <li><span class="diff med">Medium</span> Build a "Load more" paginated list component that appends new items on click, disables the button while loading, and hides it when there's no more data.</li>
+      <li><span class="diff med">Medium</span> Implement a typeahead/autocomplete search box: debounced API calls, keyboard navigation (arrow keys + Enter), and cancellation of stale requests.</li>
+      <li><span class="diff med">Medium</span> Write a function that deep-compares two objects for equality without using any library.</li>
+      <li><span class="diff hard">Hard</span> Build a drag-and-drop reorderable list using native HTML5 drag events (no library), persisting the new order in state.</li>
+      <li><span class="diff hard">Hard</span> Implement a simple client-side router (no library) that updates the URL via the History API and renders the matching component without a full page reload.</li>
+      <li><span class="diff hard">Hard</span> Build a form validation system from scratch (no library) supporting required/min-length/pattern rules, showing errors only after a field is touched or on submit.</li>
+    </ul>
+  </div>
+
+  <h3>3. Frontend "system design" style question</h3>
+  <div class="callout">
+    <strong>Prompt:</strong> "Design a comment section for a blog post, similar to what you'd see under a YouTube video — supporting nested replies, likes, and real-time updates when someone else comments."
+  </div>
+  <p>A strong answer walks through, out loud, before writing code:</p>
+  <ul>
+    <li><strong>Data shape</strong> — flat list with <code class="inline">parentId</code> vs. nested tree structure; trade-offs for rendering and updating.</li>
+    <li><strong>Component structure</strong> — a recursive <code class="inline">&lt;Comment&gt;</code> component rendering its own replies.</li>
+    <li><strong>State &amp; data fetching</strong> — where comment state lives, optimistic UI updates when posting a new comment (show it immediately, roll back on failure).</li>
+    <li><strong>Real-time updates</strong> — polling vs. WebSockets vs. server-sent events, and the trade-off (simplicity vs. latency vs. server load).</li>
+    <li><strong>Performance</strong> — pagination/virtualization for posts with thousands of comments.</li>
+    <li><strong>Edge cases</strong> — empty state (no comments yet), deleted parent comment with existing replies, race condition between liking and the list re-fetching.</li>
+  </ul>
+  <p>Interviewers are grading your <em>reasoning process</em> as much as the final code — narrate trade-offs, don't just silently pick one approach.</p>
+
+  <h3>4. Self-assessment — how much have you actually learned?</h3>
+  <p>Rate yourself honestly on each, 1 (never done it) to 5 (could teach it):</p>
+  <table>
+    <tr><th>Skill</th><th>Check yourself</th></tr>
+    <tr><td>JS closures &amp; the event loop</td><td>Can you predict console.log order across sync/microtask/macrotask without running it?</td></tr>
+    <tr><td>React state &amp; hooks</td><td>Can you explain exactly why <code class="inline">setCount(count+1)</code> twice only increments once?</td></tr>
+    <tr><td>TypeScript</td><td>Can you write a generic function and a discriminated union without looking anything up?</td></tr>
+    <tr><td>Responsive/Tailwind</td><td>Can you build a 3-breakpoint responsive layout from a static design in under 20 minutes?</td></tr>
+    <tr><td>Next.js rendering</td><td>Can you explain to a non-technical PM when you'd use SSR vs SSG vs client rendering?</td></tr>
+    <tr><td>Debugging</td><td>Given a bug report with no repro steps, do you have a process, or do you just start clicking around?</td></tr>
+    <tr><td>UI/UX sense</td><td>Looking at your own past work, can you spot spacing/alignment inconsistencies immediately?</td></tr>
+  </table>
+  <div class="callout tip">If most of these are 3 or below, that's normal after one pass — go back, rebuild the harder tasks from memory without the guide open, and re-rate yourself in a week. That gap between recognizing an answer and producing it unaided is exactly what interviews test.</div>
+
+  <div class="chapnav">
+    <button onclick="prevChapter('ch14')">← Previous</button>
+    <button disabled>You've reached the end — good luck 🚀</button>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<script>
+const chapters = Array.from(document.querySelectorAll('.chapter'));
+const navList = document.getElementById('navList');
+
+chapters.forEach((ch, i) => {
+  const link = document.createElement('div');
+  link.className = 'nav-link';
+  link.dataset.id = ch.id;
+  link.innerHTML = `<span class="nav-num">${String(i).padStart(2,'0')}</span>${ch.dataset.title}`;
+  link.onclick = () => showChapter(ch.id);
+  navList.appendChild(link);
+});
+
+function showChapter(id){
+  chapters.forEach(c => c.classList.toggle('active', c.id === id));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.id === id));
+  window.scrollTo(0,0);
+  localStorage.setItem('fm_last', id);
+  document.querySelector('.sidebar').classList.remove('open');
+  updateProgress();
+}
+
+function updateProgress(){
+  const idx = chapters.findIndex(c => c.classList.contains('active'));
+  const pct = ((idx+1) / chapters.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function nextChapter(id){
+  const idx = chapters.findIndex(c => c.id === id);
+  if(idx < chapters.length - 1) showChapter(chapters[idx+1].id);
+}
+function prevChapter(id){
+  const idx = chapters.findIndex(c => c.id === id);
+  if(idx > 0) showChapter(chapters[idx-1].id);
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.style.display = l.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+});
+
+// restore last chapter or default to first
+const last = localStorage.getItem('fm_last');
+if(last && document.getElementById(last)){ showChapter(last); } else { showChapter(chapters[0].id); }
+</script>
+</body>
+</html>
